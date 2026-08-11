@@ -10,8 +10,8 @@ This checklist tracks community-contributed simulation templates for **EMerge**.
 
 | ID | Model Name | Feed Strategy | Target Application / Notes | v2.8 | v3.0 | Contributor |
 | --- | --- | --- | --- | --- | --- | --- |
-| `PCB-ANT-01` | **Standard PCB Inverted-F (IFA)** | Microstrip Edge / Discrete | WiFi/BLE 2.4 GHz benchmark antenna. | - [ ] | - [ ] |  |
-| `PCB-ANT-02` | **Meandered Inverted-F (MIFA)** | Microstrip Edge | Compact IoT devices with limited space. | - [ ] | - [ ] |  |
+| `PCB-ANT-01` | **Standard PCB Inverted-F (IFA)** | Microstrip Edge / Discrete | WiFi/BLE 2.4 GHz benchmark antenna. | - [x] | - [x] | Robert Fennis |
+| `PCB-ANT-02` | **Meandered Inverted-F (MIFA)** | Microstrip Edge | Compact IoT devices with limited space. | - [x] | - [x] | Robert Fennis |
 | `PCB-ANT-03` | **Planar Inverted-F (PIFA)** | Coax Probe / Pin | Smartwatches and 3D enclosure layouts. | - [ ] | - [ ] |  |
 | `PCB-ANT-04` | **Dual-Band IFA (2.4 / 5 GHz)** | Microstrip Edge | Dual-band WiFi routers and gateways. | - [ ] | - [ ] |  |
 | `PCB-ANT-05` | **Printed Quarter-Wave Monopole** | Microstrip Edge | Beginner baseline; boundary condition test. | - [ ] | - [ ] |  |
