@@ -5,6 +5,27 @@ Welcome to **EMerge Hub**,  the official companion repository, model library, an
 
 Whether you're looking for a ready-to-run 2.4 GHz Bluetooth antenna script, a quick microstrip filter layout, or an RF boilerplate to kickstart your own simulation, you've come to the right place.
 
+# EMerge versions and installation
+The current latest version of EMerge is 2.8. This version is on PyPI. I am working on version 3.0 on branch `v3.0-dev`. Files may be written for 3.0 already. I try to keep it stable.
+
+### Version 2.8 Installation:
+```bash
+# Windows + Linux
+pip install emerge
+
+# MacOS
+pip install emerge
+pip install git+https://github.com/FennisRobert/emerge-aasds
+```
+### Version 3.0 Installation:
+```bash
+# Windows + Linux
+pip install git+https://github.com/FennisRobert/EMerge.git@v3.0-dev
+
+# MacOS
+pip install git+https://github.com/FennisRobert/EMerge.git@v3.0-dev
+pip install git+https://github.com/FennisRobert/emerge-aasds
+```
 ## What is in this hub?
 The hub contains many resources for people who want to get started with EMerge. It was created on August 11th 2026 so its mostly empty. It will be filled as time goes on.
 * **`Template/`**: A directory with all sorts of template files for different passive RF components that you can use to model your design of choice.
