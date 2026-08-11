@@ -1,5 +1,5 @@
 # =============================================================================
-# EMerge Simulation Template: PCB-ANT-01
+# EMerge Simulation Template: PCB-ANT-03
 #
 # Copyright (C) 2026 Robert Fennis
 #
@@ -62,13 +62,15 @@ n_points = 11
 
 WPCB = 70*mm
 LPCB = 150*mm
-xpos_feed = 5*mm
-ydist = 5*mm
+xpos_feed = 8.7*mm
+dy = 10*mm
+dx = 10*mm
 want = 1*mm
-wfeed = 1*mm
+hant = 10*mm
 lport = 1*mm
-lant = 22.5*mm
+lant = 27*mm
 
+thmetal = 0.5*mm
 thpcb = 1.5*mm
 air_margin = 50*mm
 ############################################################
@@ -77,27 +79,25 @@ air_margin = 50*mm
 
 
 model = em.Simulation("TemplateDemo")
-model.check_version("3.0.0")  # Checks version compatibility.
+model.check_version("2.8.2")  # Checks version compatibility.
 
 ############################################################
 #                          GEOMETRY                        #
 ############################################################
 
-dielectric = em.geo.Box(WPCB, LPCB, thpcb, (-WPCB/2, -LPCB/2, -thpcb)).set_material(em.lib.DIEL_FR4)
+PCB_metalized = em.geo.Box(WPCB, LPCB, thpcb, (-WPCB/2, -LPCB/2, -thpcb)).set_material(em.lib.COPPER)
 
-top_gnd = em.geo.XYPlate(WPCB, LPCB-ydist, (-WPCB/2, -LPCB/2, 0)).set_material(em.lib.COPPER)
 
-x0 = -WPCB/2
-y0 = LPCB/2-ydist
+x0 = -WPCB/2+dx
+y0 = LPCB/2-dy
 
-ant_poly = em.geo.XYPolygon(
-    xs = [x0, x0+want, x0+want, x0 + lant, x0 + lant, x0],
-    ys = [y0, y0, y0+ydist-want, y0+ydist-want, y0+ydist, y0+ydist],).geo(em.GCS).set_material(em.lib.COPPER)
+ant_up = em.geo.Box(thmetal, want, hant, (x0, y0-want/2, 0)).set_material(em.lib.COPPER)
+ant_side = em.geo.Box(lant, want, thmetal, (x0, y0-want/2, hant)).set_material(em.lib.COPPER)
+ant_feed = ant_side = em.geo.Box(thmetal, want, hant-lport, (x0+xpos_feed-thmetal/2, y0-want/2, lport)).set_material(em.lib.COPPER)
 
-ant_feed = em.geo.XYPlate(wfeed, ydist-wfeed-lport, (x0+xpos_feed-wfeed/2, y0+lport, 0)).set_material(em.lib.COPPER)
+antenna = em.geo.unite(ant_up, ant_side, ant_feed)
 
-ant_poly = em.geo.add(ant_poly, ant_feed)
-ant_port = em.geo.XYPlate(wfeed, lport, (x0+xpos_feed-wfeed/2, y0, 0))
+ant_port = em.geo.Plate((x0+xpos_feed, y0-want/2, 0), (0, want, 0), (0,0,lport))
 
 
 air = em.geo.open_region(air_margin,air_margin,air_margin)
@@ -118,11 +118,11 @@ model.commit_geometry()
 model.mw.set_frequency_range(f1, f2, n_points)
 
 # Set the overall mesh resolution as a fraction of the wavelength.
-model.mw.set_resolution(0.2)
+model.mw.set_resolution(0.15)
 
 # Optional: refine the mesh locally around critical features
 # (edges, ports, small gaps, vias, etc.)
-model.mesher.set_boundary_size(ant_poly, 0.5 * mm)
+model.mesher.set_boundary_size(antenna, 0.5 * mm)
 model.mesher.set_face_size(ant_port, 0.5 * mm)
 
 ############################################################
@@ -136,7 +136,7 @@ model.view()
 #                    BOUNDARY CONDITIONS                    #
 ############################################################
 
-model.mw.bc.LumpedPort(ant_port, 1, width=wfeed, height=lport, direction=em.YAX)
+model.mw.bc.LumpedPort(ant_port, 1, width=want, height=lport, direction=em.ZAX)
 model.mw.bc.AbsorbingBoundary(air.boundary())
 
 ############################################################
