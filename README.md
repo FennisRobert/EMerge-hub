@@ -79,6 +79,7 @@ EMerge is built by the community, for the community. You don't need a PhD in com
 
 --- 
 ## Template file Rules
+ 0. You may make templates for either 2.8, 3.0 or both 2.8 and 3.0. Files might be automatically compatible. The biggest difference is that 3.0 sometimes automatically assigns boundary conditions.
  1. Unless absolutely necessary, there shouldn't be dependencies besides what is already used for EMerge.
     - Use the build in plot functions from `emerge.plot` if possible. If the plot functions don't support what you need (which is very possible) feel free to use your own custom matplotlib import and plotting.
  2. Designs should be as parametric as possible. That is to say that values for dimensions and parameters should follow from variables defined in the `DESIGN / GEOMETRY PARAMETERS` section of the file. 
