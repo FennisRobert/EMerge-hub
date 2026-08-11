@@ -1,10 +1,18 @@
 # Welcome to EMerge Hub!
+(this README is generated with the help of Google Gemini because I suck at writing :) Feel free to make edits )
 
-Welcome to **EMerge Hub** — the official companion repository, model library, and community playground for **EMerge**, the open-source Python-based Finite Element Method (FEM) full-wave electromagnetic solver!
+Welcome to **EMerge Hub**,  the official companion repository, model library, and community playground for **EMerge**, the open-source Python-based Finite Element Method (FEM) full-wave electromagnetic solver!
 
 Whether you're looking for a ready-to-run 2.4 GHz Bluetooth antenna script, a quick microstrip filter layout, or an RF boilerplate to kickstart your own simulation, you've come to the right place.
 
----
+## What is in this hub?
+The hub contains many resources for people who want to get started with EMerge. It was created on August 11th 2026 so its mostly empty. It will be filled as time goes on.
+* **`Template/`**: A directory with all sorts of template files for different passive RF components that you can use to model your design of choice.
+* **`Materials/`**: An even larger community managed curated library of PCB substrates (FR-4, Rogers, Isola), conductors, and frequency-dependent dielectric models.
+* **`Components/`**: Drop-in 3D geometry macros, wave port feeds, and SMA edge-launch connector setups.
+* **`Benchmarks/`**: High-precision validation models against textbook analytical solutions and published papers.
+* **`Tutorials/`**: Step-by-step interactive Jupyter Notebooks designed to guide non-RF engineers through full-wave simulation from scratch.
+
 
 ## Exploring the Hub
 
@@ -32,17 +40,6 @@ templates/
 ```
 
 > 💡 **Where do I start?** Check out [`CHECKLIST.md`](https://www.google.com/search?q=CHECKLIST.md)! It contains the master index of all planned templates, their target application, and their current status.
-
----
-
-## What's Next on the Roadmap?
-
-While our primary focus is filling out the `/templates` directory, we have big plans for EMerge Hub! You'll notice several empty directories ready for upcoming modules:
-
-* **`materials/`**: An even larger community managed curated library of PCB substrates (FR-4, Rogers, Isola), conductors, and frequency-dependent dielectric models.
-* **`components/`**: Drop-in 3D geometry macros, wave port feeds, and SMA edge-launch connector setups.
-* **`benchmarks/`**: High-precision validation models against textbook analytical solutions and published papers.
-* **`tutorials/`**: Step-by-step interactive Jupyter Notebooks designed to guide non-RF engineers through full-wave simulation from scratch.
 
 ---
 
