@@ -51,7 +51,7 @@ This checklist tracks community-contributed simulation templates for **EMerge**.
 
 | ID | Model Name | Feed Strategy | Target Application / Notes | v2.8 | v3.0 | Contributor |
 | --- | --- | --- | --- | --- | --- | --- |
-| `PCB-DIV-01` | **2-Way Wilkinson Power Divider** | Microstrip + Resistor | Equi-phase power split with internal resistor. | - [ ] | - [ ] |  |
+| `PCB-DIV-01` | **2-Way Wilkinson Power Divider** | Microstrip + Resistor | Equi-phase power split with internal resistor. | - [x] | - [x] | Robert Fennis |
 | `PCB-DIV-02` | **Gysel Power Divider** | Microstrip | High-power alternative to Wilkinson. | - [ ] | - [ ] |  |
 | `PCB-DIV-03` | **Branchline Coupler (90° Hybrid)** | Microstrip | Quadrature phase generation for mixers. | - [ ] | - [ ] |  |
 | `PCB-DIV-04` | **Rat-Race Coupler (180° Hybrid)** | Microstrip | Sum and difference monopulse networks. | - [ ] | - [ ] |  |
