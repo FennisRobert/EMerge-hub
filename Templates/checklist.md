@@ -14,8 +14,8 @@ This checklist tracks community-contributed simulation templates for **EMerge**.
 | `PCB-ANT-02` | **Meandered Planar Inverted-F (MIFA)** | Microstrip Edge | Compact 868MHz. | - [x] | - [x] | Robert Fennis |
 | `PCB-ANT-03` | **Inverted-F (IFA)** | Vertical Lumped Port | Standard design with metal plates | - [x] | - [x] | Robert Fennis |
 | `PCB-ANT-04` | **Dual-Band IFA (2.4 / 5 GHz)** | Microstrip Edge | Dual-band WiFi routers and gateways. | - [ ] | - [ ] |  |
-| `PCB-ANT-05` | **Printed Quarter-Wave Monopole** | Microstrip Edge | Beginner baseline; boundary condition test. | - [ ] | - [ ] |  |
-| `PCB-ANT-06` | **Meander-Line Monopole** | Microstrip Edge | Sub-GHz (433/868 MHz) LoRa & RFID. | - [ ] | - [ ] |  |
+| `PCB-ANT-05` | **Printed Quarter-Wave Monopole** | Microstrip Edge | Beginner baseline; boundary condition test. 2.4GHz | - [x] | - [x] | Robert Fennis |
+| `PCB-ANT-06` | **Meander-Line Monopole** | Microstrip Edge | Sub-GHz (433/868 MHz) LoRa & RFID. | - [x] | - [x] | Robert Fennis |
 | `PCB-ANT-07` | **Inverted-L Antenna (ILA)** | Microstrip Edge | Compact single-band planar antenna. | - [ ] | - [ ] |  |
 | `PCB-ANT-08` | **Ceramic Chip Antenna Model** | SMT Pad + Keepout | Simulates chip antenna with PCB keep-out. | - [ ] | - [ ] |  |
 | `PCB-ANT-09` | **Inset-Fed Rectangular Patch** | Microstrip Edge (Inset) | Impedance matching via inset depth. | - [ ] | - [ ] |  |
