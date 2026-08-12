@@ -19,7 +19,7 @@
 # =============================================================================
 
 # -----------------------------------------------------------------------------
-# Basic Wilkinson power divider on an 0.508mm FR4 substrate
+# This models a 3GHz Lange coupler. Under construction
 # -----------------------------------------------------------------------------
 from emerge_config import config
 config.set_acc_threads(10)
@@ -56,24 +56,24 @@ MU0 = 1/(C0*C0*EPS0)
 # to tweak.
 
 # --- Frequency ------------------------------------------------------------
-f0 = 2.45*GHz
-f1 = 2*GHz
-f2 = 3*GHz
-nf = 31
+f0 = 3*GHz
+f1 = 1*GHz
+f2 = 5*GHz
+nf = 21
 
 # --- Geometry dimensions ---------------------------------------------------
 
-w0 = 0.98*mm
-w1 = 0.51*mm
+w0 = 0.49*mm
+w1 = 0.05*mm
+r0b = 0.025*mm
 
-Lf = 5*mm
-Ltot = 22.5*mm
-Lside = 5*mm
-Lgap = 1*mm
-Lforward = Ltot-Lside-Lgap-Lside
-margin = 5*mm
+margin = 1*mm
+Lf = 2*mm
+Lt = 15*mm
+Lh = Lt/2
+ds = 0.2*mm
 
-th = 0.508*mm
+th = 0.258*mm
 
 ############################################################
 #                      SIMULATION SETUP                    #
@@ -81,39 +81,53 @@ th = 0.508*mm
 
 
 model = em.Simulation("TemplateDemo")
-model.check_version("2.8.3")  # Checks version compatibility.
+model.check_version("3.0.0")  # Checks version compatibility.
 
 ############################################################
 #                          GEOMETRY                        #
 ############################################################
 
-pcb = em.geo.PCBNew(th, 1.0, material=em.lib.DIEL_FR4, trace_material=em.lib.PEC)
+pcb = em.geo.PCB(th, 1.0, material=em.lib.DIEL_FR4, trace_material=em.lib.PEC)
 
-print(f'z0 50 = {pcb.calc.z0(50)*1000:.2f}mm')
-print(f'z0 70 = {pcb.calc.z0(2**0.5*50)*1000:.2f}mm')
+print(pcb.calc.z0(50)*1000)
+pcb.new(-Lf-w0,-Lh-w0/2-ds-w1, w0, (1,0), 1)[1].straight(Lf).turn(-90, corner_type='champher').straight(ds)
+pcb.new(-Lf-w0, Lh+w0/2+ds+w1, w0, (1,0), 1)[2].straight(Lf-2*w1).turn(90, corner_type='champher').straight(ds)
 
-pcb.new(0,0,w0,(1,0), z=pcb.z(1))[1].straight(Lf)\
-    .split((0,1), width=w1).straight(Lside).pturn(90, corner_type='champher')\
-    .straight(Lforward).pturn(90, corner_type='champher').straight(Lside-Lgap/2)\
-    .lumped_element(lambda f: 100.0, (Lgap, Lgap/2))\
-    .jump(0, Lgap+w0/2, w0, (1,0)).curve(-90, Lf).straight(1*mm)[2].merge()\
-    .split((0,-1), width=w1).straight(Lside).pturn(-90, corner_type='champher')\
-    .straight(Lforward).pturn(-90, corner_type='champher').straight(Lside-Lgap/2)\
-    .jump(0, -w0/2, w0, (1,0)).curve(90, Lf).straight(1*mm)[3]
+pcb.new(Lf+w0-w1,-Lh-w0/2-ds-w1, w0, (-1,0), 1)[3].straight(Lf-2*w1).turn(90, corner_type='champher').straight(ds)
+pcb.new(Lf+w0-w1, Lh+w0/2+ds+w1, w0, (-1,0), 1)[4].straight(Lf).turn(-90, corner_type='champher').straight(ds)
 
+
+poly1 = pcb.plane(pcb.z(1), w1, Lt+2*w1, (-w1, -Lh-w1))
+poly2 = pcb.plane(pcb.z(1), w1, Lh+2*w1, (-5*w1, -Lh-w1))
+poly3 = pcb.plane(pcb.z(1), w1, Lt+1*w1, (-3*w1, -Lh))
+poly4 = pcb.plane(pcb.z(1), w1, Lt+1*w1, (w1, -Lh-w1))
+poly5 = pcb.plane(pcb.z(1), w1, Lh+2*w1, (3*w1, -w1))
 trace = pcb.compile_paths(True)
 
-pcb.determine_bounds(margin, margin,margin, margin)
+metal = em.geo.unite(poly1, poly2, poly3, poly4, poly5, trace)
 
-p1 = pcb.lumped_port(1)
-p2 = pcb.lumped_port(2)
-p3 = pcb.lumped_port(3)
+pcb.determine_bounds(margin, margin, margin, margin)
+
+p1 = pcb.lumped_port(1, 1)
+p2 = pcb.lumped_port(2, 2)
+p3 = pcb.lumped_port(3, 3)
+p4 = pcb.lumped_port(4, 4)
 
 le = pcb.lumped_elements
 diel = pcb.generate_pcb()
-air = pcb.generate_air(5*mm)
+air = pcb.generate_air(2*mm)
 
+# bond wires
+def make_bondwire(x0, y0):
+    boxout = em.geo.Box(2*r0b+4*w1, 2*r0b, 2*w1+r0b, (x0-r0b, y0-r0b, 0))
+    boxin = em.geo.Box(-2*r0b+4*w1, 2*r0b, 2*w1-r0b, (x0+r0b, y0-r0b, 0))
+    wire = em.geo.subtract(boxout, boxin).set_material(em.lib.PEC)
+    return wire
 
+wire1 = make_bondwire(-4.5*w1,0)
+wire2 = make_bondwire(-2.5*w1,-Lh+w1/2)
+wire3 = make_bondwire(-2.5*w1,+Lh-w1/2)
+wire4 = make_bondwire(-0.5*w1,0)
 ############################################################
 #                      COMMIT GEOMETRY                     #
 ############################################################
@@ -131,7 +145,9 @@ model.mw.set_frequency_range(f1, f2, nf)
 
 # Set the overall mesh resolution as a fraction of the wavelength.
 model.mw.set_resolution(0.2)
-model.mesher.set_boundary_size(trace, 0.5*mm)
+model.mesher.set_boundary_size(metal, 0.1*mm)
+model.mesher.set_domain_size(em.select(wire1,wire2,wire3,wire4), r0b)
+
 ############################################################
 #                    GENERATE & VIEW MESH                   #
 ############################################################
@@ -143,10 +159,6 @@ model.view()
 #                    BOUNDARY CONDITIONS                    #
 ############################################################
 
-lp1 = model.mw.bc.LumpedPort(p1, 1)
-lp2 = model.mw.bc.LumpedPort(p2, 2)
-lp3 = model.mw.bc.LumpedPort(p3, 3)
-le = model.mw.bc.LumpedElement(le[0])
 
 ############################################################
 #                       RUN SIMULATION                      #
@@ -163,21 +175,8 @@ f = g.freq
 S11 = g.S(1, 1)
 S21 = g.S(2, 1)
 S31 = g.S(3, 1)
-plot_sp(f, [S11, S21, S31], labels=["S11", "S21","S31"], dblim=[-40, 6])
-
-g = data.scalar.grid
-f = g.freq
-S11 = g.S(1, 2)
-S21 = g.S(2, 2)
-S31 = g.S(3, 2)
-plot_sp(f, [S11, S21, S31], labels=["Reverse Transmission (S12)", "Output RL(S22)","Output Isolation (S31)"], dblim=[-40, 6])
-
-# Optional: supersample with Vector Fitting for smoother curves
-fdense = g.dense_f(2001)
-S11_fit = g.model_S(1, 1)
-S21_fit = g.model_S(2, 1)
-S31_fit = g.model_S(3, 1)
-plot_sp(fdense, [S11_fit, S21_fit, S31_fit], labels=["S11", "S21", "S31"])
+S41 = g.S(4, 1)
+plot_sp(f, [S11, S21, S31, S41], labels=["S11", "S21","S31","S41"], dblim=[-40, 6])
 
 ############################################################
 #                     3D FIELD VISUALIZATION                 #
@@ -187,5 +186,5 @@ field = data.field.find(freq=f0)
 field.set_excitations(0,1,0)
 display = model.display
 display.populate()
-display.animate().add_field(field.grid(N=200_000).scalar('Ez','complex'), symmetrize=True, clim_crop_factor=0.25)
+display.animate().add_field(field.grid(N=500_000, z_range=(-th, th)).scalar('Ez','complex'), symmetrize=True, clim_crop_factor=0.5)
 display.show()
