@@ -1,5 +1,5 @@
 # =============================================================================
-# EMerge Simulation Template: PCB-ANT-02
+# EMerge Simulation Template: PCB-ANT-11
 #
 # Copyright (C) 2026 Robert Fennis
 #
@@ -20,7 +20,10 @@
 # -----------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------
-# This is a simulation model of a simple inset fed patch at 2.4GHz
+# This is a simple simulation model of a coax fed patch.
+# A coaxial feed consisting of a teflon dielectric is used to excite the patch
+# Notice that a fixed N-sided polygon is used instead of a circle to require the geometry
+# to have a consistent radius.
 #
 # The model claims approximately 4GB of RAM
 # -----------------------------------------------------------------------------
@@ -61,16 +64,22 @@ n_points = 11
 # --- Geometry dimensions ---------------------------------------------------
 
 Wpatch = 32*mm
-Lpatch = 29.2*mm
-inset_distance = 10*mm
-inset_gap = 1*mm
-feed_length = 10*mm
+Lpatch = 28.5*mm
+feed_distance = 6*mm
+
+ro = 1*mm
+ri = em.coax_rin(ro, eps_r=2.1) # Teflon
+
+Lfeed = 5*mm
+
 w0 = 2.88*mm
+w1 = 0.5*mm
 
 WPCB = 60*mm
 LPCB = 70*mm
 
 th_pcb = 1.5*mm
+
 ############################################################
 #                      SIMULATION SETUP                    #
 ############################################################
@@ -85,20 +94,19 @@ model.check_version("3.0.0")  # Checks version compatibility.
 
 pcb = em.geo.PCB(th_pcb, 1.0, material=em.lib.DIEL_FR4)
 
-pcb.new(-feed_length, 0, w0, (1,0), 1)['port'].straight(feed_length)
-
-patch_poly = em.geo.XYPolygon(
-    xs = [0, inset_distance, inset_distance, 0, 0, Lpatch, Lpatch, 0, 0, inset_distance, inset_distance, 0],
-    ys = [w0/2, w0/2, w0/2+inset_gap, w0/2+inset_gap, Wpatch/2, Wpatch/2, -Wpatch/2, -Wpatch/2, -w0/2-inset_gap, -w0/2-inset_gap, -w0/2, -w0/2])\
-    .geo(em.GCS).set_material(em.lib.COPPER)
-
-pcb.set_bounds(-feed_length-10*mm, -WPCB/2, -feed_length-10*mm+LPCB, WPCB/2)
+pcb.new(-Lpatch/2, 0, Wpatch, (1,0), 1).straight(Lpatch)
 
 trace = pcb.compile_paths(True)
 
+pcb.determine_bounds(15*mm, 15*mm, 15*mm, 15*mm)
+
+
 diel = pcb.generate_pcb()
 air = pcb.generate_air(20*mm)
-lumped_port_face = pcb.lumped_port('port', port_number=1)
+
+# Coax Feed
+coax_out = em.geo.Cylinder(ro, Lfeed, em.cs(origin=(-feed_distance, 0, -th_pcb-Lfeed)), Nsections=15).set_material(em.lib.DIEL_TEFLON)
+coax_in = em.geo.Cylinder(ri, Lfeed+th_pcb, em.cs(origin=(-feed_distance, 0, -th_pcb-Lfeed)), Nsections=12).set_material(em.lib.COPPER).foreground()
 
 ############################################################
 #                      COMMIT GEOMETRY                     #
@@ -117,10 +125,8 @@ model.mw.set_frequency_range(f1, f2, n_points)
 # Set the overall mesh resolution as a fraction of the wavelength.
 model.mw.set_resolution(0.2)
 
-# Optional: refine the mesh locally around critical features
-# (edges, ports, small gaps, vias, etc.)
-model.mesher.set_boundary_size(em.select(trace, patch_poly), 1 * mm)
-model.mesher.set_face_size(lumped_port_face, 0.5 * mm)
+model.mesher.set_boundary_size(trace, 1 * mm)
+model.mesher.set_domain_size(coax_out, ri)
 
 ############################################################
 #                    GENERATE & VIEW MESH                   #
@@ -135,6 +141,7 @@ model.view(plot_mesh=True)
 
 abc_boundary = air.boundary(exclude='bottom')
 model.mw.bc.AbsorbingBoundary(abc_boundary)
+model.mw.bc.ModalPort(coax_out.face('-z'), 1)
 
 ############################################################
 #                       RUN SIMULATION                      #

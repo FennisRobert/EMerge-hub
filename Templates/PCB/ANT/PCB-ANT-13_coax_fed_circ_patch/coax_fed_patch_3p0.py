@@ -1,5 +1,5 @@
 # =============================================================================
-# EMerge Simulation Template: PCB-ANT-02
+# EMerge Simulation Template: PCB-ANT-13
 #
 # Copyright (C) 2026 Robert Fennis
 #
@@ -20,7 +20,12 @@
 # -----------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------
-# This is a simulation model of a simple inset fed patch at 2.4GHz
+# This is a simulation model of a 2.4 GHz circular patch with twoo coax feeds.
+# The 90 degree out of phase excitation is done in post processing, it does not have to be done
+# when setting up the simulation
+# The set_excitations() function is used to configure the field solution once to excite the ports as following:
+# Port 1: amplitude = 1, phase = 0 deg -> Signal = 1.0 + 0.0j
+# Port 2: amplitude = 1, phase = 90deg -> Signal = 0.0 + 1.0j
 #
 # The model claims approximately 4GB of RAM
 # -----------------------------------------------------------------------------
@@ -60,17 +65,22 @@ n_points = 11
 
 # --- Geometry dimensions ---------------------------------------------------
 
-Wpatch = 32*mm
-Lpatch = 29.2*mm
-inset_distance = 10*mm
-inset_gap = 1*mm
-feed_length = 10*mm
+Rpatch = 16.8*mm
+feed_distance = 6*mm
+
+ro = 1*mm
+ri = em.coax_rin(ro, eps_r=2.1) # Teflon
+
+Lfeed = 5*mm
+
 w0 = 2.88*mm
+w1 = 0.5*mm
 
 WPCB = 60*mm
 LPCB = 70*mm
 
 th_pcb = 1.5*mm
+
 ############################################################
 #                      SIMULATION SETUP                    #
 ############################################################
@@ -85,20 +95,22 @@ model.check_version("3.0.0")  # Checks version compatibility.
 
 pcb = em.geo.PCB(th_pcb, 1.0, material=em.lib.DIEL_FR4)
 
-pcb.new(-feed_length, 0, w0, (1,0), 1)['port'].straight(feed_length)
+th = np.linspace(0, 2*PI, 31)[:-1]
 
-patch_poly = em.geo.XYPolygon(
-    xs = [0, inset_distance, inset_distance, 0, 0, Lpatch, Lpatch, 0, 0, inset_distance, inset_distance, 0],
-    ys = [w0/2, w0/2, w0/2+inset_gap, w0/2+inset_gap, Wpatch/2, Wpatch/2, -Wpatch/2, -Wpatch/2, -w0/2-inset_gap, -w0/2-inset_gap, -w0/2, -w0/2])\
-    .geo(em.GCS).set_material(em.lib.COPPER)
-
-pcb.set_bounds(-feed_length-10*mm, -WPCB/2, -feed_length-10*mm+LPCB, WPCB/2)
+pcb.add_poly(Rpatch*np.cos(th), Rpatch*np.sin(th), layer=1)
 
 trace = pcb.compile_paths(True)
 
+pcb.determine_bounds(15*mm, 15*mm, 15*mm, 15*mm)
+
 diel = pcb.generate_pcb()
 air = pcb.generate_air(20*mm)
-lumped_port_face = pcb.lumped_port('port', port_number=1)
+
+# Coax Feed
+coax_out_1 = em.geo.Cylinder(ro, Lfeed, em.cs(origin=(-feed_distance, 0, -th_pcb-Lfeed)), Nsections=15).set_material(em.lib.DIEL_TEFLON)
+coax_in_1 = em.geo.Cylinder(ri, Lfeed+th_pcb, em.cs(origin=(-feed_distance, 0, -th_pcb-Lfeed)), Nsections=12).set_material(em.lib.COPPER).foreground()
+coax_out_2 = em.geo.Cylinder(ro, Lfeed, em.cs(origin=(0,-feed_distance, -th_pcb-Lfeed)), Nsections=15).set_material(em.lib.DIEL_TEFLON)
+coax_in_2 = em.geo.Cylinder(ri, Lfeed+th_pcb, em.cs(origin=(0, -feed_distance, -th_pcb-Lfeed)), Nsections=12).set_material(em.lib.COPPER).foreground()
 
 ############################################################
 #                      COMMIT GEOMETRY                     #
@@ -117,11 +129,9 @@ model.mw.set_frequency_range(f1, f2, n_points)
 # Set the overall mesh resolution as a fraction of the wavelength.
 model.mw.set_resolution(0.2)
 
-# Optional: refine the mesh locally around critical features
-# (edges, ports, small gaps, vias, etc.)
-model.mesher.set_boundary_size(em.select(trace, patch_poly), 1 * mm)
-model.mesher.set_face_size(lumped_port_face, 0.5 * mm)
-
+model.mesher.set_boundary_size(trace, 1 * mm)
+model.mesher.set_domain_size(coax_out_1, ri)
+model.mesher.set_domain_size(coax_out_2, ri)
 ############################################################
 #                    GENERATE & VIEW MESH                   #
 ############################################################
@@ -135,6 +145,10 @@ model.view(plot_mesh=True)
 
 abc_boundary = air.boundary(exclude='bottom')
 model.mw.bc.AbsorbingBoundary(abc_boundary)
+
+# We will excite circular polarization
+model.mw.bc.ModalPort(coax_out_1.face('-z'), 1)
+model.mw.bc.ModalPort(coax_out_2.face('-z'), 2)
 
 ############################################################
 #                       RUN SIMULATION                      #
@@ -154,22 +168,32 @@ smith(S11, f)
 # supersample with Vector Fitting for smoother curves
 fdense = g.dense_f(2001)
 S11_fit = g.model_S(1, 1, fdense)
+
 plot_sp(fdense, [S11_fit], labels=["S11"])
 
 ############################################################
 #              POST-PROCESSING: FAR-FIELD (ANTENNAS)         #
 ############################################################
+field = data.field.find(freq=f0)
+# We will excite 90 degrees out of phase
 
-ff_xz = data.field.find(freq=f0).farfield_2d(em.ZAX, em.YAX, abc_boundary)
-ff_yz = data.field.find(freq=f0).farfield_2d(em.ZAX, em.XAX, abc_boundary)
-plot_ff(ff_xz.ang * 180 / np.pi, [ff_xz.gain.norm, ff_yz.gain.norm], labels=['XZ Plane','YZ Plane'], dB=True, ylabel="Gain [dBi]")
+field.set_excitations(1.0, 1.0*1j)
+
+ff_xz = field.farfield_2d(em.ZAX, em.YAX, abc_boundary)
+ff_yz = field.farfield_2d(em.ZAX, em.XAX, abc_boundary)
+
+plot_ff(ff_xz.ang * 180 / np.pi, [ff_xz.gain.lhcp, 
+                                  ff_yz.gain.lhcp,
+                                  ff_xz.gain.rhcp, 
+                                  ff_yz.gain.rhcp], 
+        labels=['XZ Plane LHCP','YZ Plane LHCP', 'XZ Plane RHCP','YZ Plane RHCP'], dB=True, ylabel="Gain Circular polarized [dBi]")
 plot_ff_polar(ff_xz.ang, ff_yz.gain.norm, dB=True, dBfloor=-20)
 
 ############################################################
 #                     3D FIELD VISUALIZATION                 #
 ############################################################
 
-field = data.field.find(freq=f0)
+
 ff3d = field.farfield_3d(abc_boundary)
 display = model.display
 display.populate()

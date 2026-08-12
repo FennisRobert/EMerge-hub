@@ -1,5 +1,5 @@
 # =============================================================================
-# EMerge Simulation Template: PCB-ANT-16
+# EMerge Simulation Template: PCB-ANT-04
 #
 # Copyright (C) 2026 Robert Fennis
 #
@@ -63,7 +63,7 @@ n_points = 11
 lambda0 = c0 / f0          # free-space wavelength at f0
 
 ############################################################
-#     STEP 1: PATCH DIMENSIONS (TRANSMISSION-LINE MODEL)   #
+#      STEP 1: PATCH DIMENSIONS (TRANSMISSION-LINE MODEL)   #
 ############################################################
 
 # Patch width for good radiation efficiency
@@ -87,7 +87,6 @@ L_patch = L_eff - 2 * dL
 # To save some RAM we make it a bit shorter to correct for the drift due to the
 # discretization
 L_patch = L_patch * 0.975
-
 # Approximate radiating-edge resistance (Balanis' single-slot approximation)
 R_edge = 90 * (er ** 2 / (er - 1)) * (L_patch / W_patch) ** 2
 
@@ -111,7 +110,7 @@ def microstrip_eps_eff(w: float, h: float, er: float) -> float:
 
 # We use the PCB layouter purely for its microstrip impedance calculator here;
 # the actual trace geometry is routed with it further below.
-pcb = em.geo.PCB(th, unit=1.0, material=em.lib.DIEL_RO4003C)
+pcb = em.geo.PCBNew(th, unit=1.0, material=em.lib.DIEL_RO4003C)
 
 Z_in = 50.0                       # main input line impedance
 Z_branch = 100.0                  # impedance each branch must present at the T
@@ -144,7 +143,7 @@ d_branch = element_spacing / 2 - Lq
 ############################################################
 
 model = em.Simulation("PatchArray2x1")
-model.check_version("3.0.0")  # Checks version compatibility.
+model.check_version("2.8.0")  # Checks version compatibility.
 
 ############################################################
 #                    FEED NETWORK ROUTING                   #
@@ -197,7 +196,7 @@ copper.set_material(em.lib.PEC)
 ############################################################
 
 # Lumped port at the open (bottom) end of the input trunk
-pin_port = pcb.lumped_port(pcb.load("pin"), 1)
+pin_port = pcb.lumped_port(pcb.load("pin"))
 
 # Extend the board bounds so it fully covers both patches, not just the
 # trace. We pad top AND bottom generously since the exact side the bends
@@ -244,6 +243,7 @@ model.view()
 #                    BOUNDARY CONDITIONS                     #
 ############################################################
 abc_boundary = air.boundary(exclude='-z')
+port1 = model.mw.bc.LumpedPort(pin_port, 1)
 abc = model.mw.bc.AbsorbingBoundary(abc_boundary)
 
 model.view(bc=True)
@@ -304,6 +304,6 @@ model.display.add_farfield3d(
 # Horizontal cut a few mm above the array shows the interference pattern
 # between the two elements - the whole point of building an array!
 model.display.animate().add_field(
-    field.grid(N=200_000).scalar("Ey", "complex"), symmetrize=True, clim_crop_factor=0.2
+    field.grid(N=200_000).scalar("Ey", "complex"), symmetrize=True
 )
 model.display.show()

@@ -20,12 +20,12 @@ This checklist tracks community-contributed simulation templates for **EMerge**.
 | `PCB-ANT-08` | **Ceramic Chip Antenna Model** | SMT Pad + Keepout | Simulates chip antenna with PCB keep-out. | - [ ] | - [ ] |  |
 | `PCB-ANT-09` | **Inset-Fed Rectangular Patch** | Microstrip Edge (Inset) | Impedance matching via inset depth. | - [x] | - [x] | Robert Fennis |
 | `PCB-ANT-10` | **Quarter-Wave Transformer Patch** | Microstrip Edge | Transmission line matching example. | - [x] | - [x] | Robert Fennis |
-| `PCB-ANT-11` | **Coaxial Probe-Fed Patch** | Coax Pin thru Ground | GPS receivers and high-power boards. | - [ ] | - [ ] |  |
+| `PCB-ANT-11` | **Coaxial Probe-Fed Patch** | Coax Pin thru Ground | GPS receivers and high-power boards. | - [x] | - [x] | Robert Fennis |
 | `PCB-ANT-12` | **Aperture-Coupled Patch** | Bottom Layer Microstrip | Multi-layer stackups and high isolation. | - [ ] | - [ ] |  |
 | `PCB-ANT-13` | **Probe-Fed Circular Patch** | Coax Probe | Circular geometry mesh test; radar/GPS. | - [ ] | - [ ] |  |
 | `PCB-ANT-14` | **Corner-Truncated Square Patch** | Microstrip / Probe | Circular polarization (CP) & axial ratio. | - [ ] | - [ ] |  |
 | `PCB-ANT-15` | **Dual-Feed Square CP Patch** | 90° Phase-Shift Feeds | Multi-port CP excitation benchmark. | - [ ] | - [ ] |  |
-| `PCB-ANT-16` | **2x1 Patch Array + Power Divider** | Microstrip Feed Network | Basic array factor & feed network synthesis. | - [ ] | - [ ] |  |
+| `PCB-ANT-16` | **2x1 Patch Array + Power Divider** | Microstrip Feed Network | Basic array factor & feed network synthesis. | - [x] | - [x] | Robert Fennis (Claude) |
 | `PCB-ANT-17` | **2x2 Planar Patch Array** | Microstrip Feed Network | 5G / mmWave beamforming array. | - [ ] | - [ ] |  |
 | `PCB-ANT-18` | **Printed PCB Yagi-Uda** | Microstrip Balun | Directional drones / FPV video links. | - [ ] | - [ ] |  |
 | `PCB-ANT-19` | **Vivaldi Tapered Slot Antenna** | Microstrip to Slotline | UWB radar and wideband sensing. | - [ ] | - [ ] |  |
@@ -38,8 +38,8 @@ This checklist tracks community-contributed simulation templates for **EMerge**.
 
 | ID | Model Name | Feed Strategy | Target Application / Notes | v2.8 | v3.0 | Contributor |
 | --- | --- | --- | --- | --- | --- | --- |
-| `PCB-FLT-01` | **Stepped-Impedance LPF** | Microstrip | Alternating high/low impedance traces. | - [ ] | - [ ] |  |
-| `PCB-FLT-02` | **Open-Stub Low Pass Filter** | Microstrip | Demonstrates Kuroda identities/stubs. | - [ ] | - [ ] |  |
+| `PCB-FLT-01` | **Stepped-Impedance LPF** | Microstrip | Alternating high/low impedance traces. | - [x] | - [x] | Robert Fennis |
+| `PCB-FLT-02` | **Open-Stub Low Pass Filter** | Microstrip | Demonstrates Kuroda identities/stubs. | - [x] | - [x] | Robert Fennis |
 | `PCB-FLT-03` | **Edge-Coupled Bandpass Filter** | Microstrip | Parallel coupled lines for RF front-ends. | - [ ] | - [ ] |  |
 | `PCB-FLT-04` | **Hairpin Bandpass Filter** | Microstrip | U-shaped folded resonators for compact size. | - [ ] | - [ ] |  |
 | `PCB-FLT-05` | **Interdigital Bandpass Filter** | Microstrip / Stripline | High-performance filter with grounded vias. | - [ ] | - [ ] |  |

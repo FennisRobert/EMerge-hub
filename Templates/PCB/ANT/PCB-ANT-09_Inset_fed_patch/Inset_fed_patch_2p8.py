@@ -1,5 +1,5 @@
 # =============================================================================
-# EMerge Simulation Template: PCB-ANT-02
+# EMerge Simulation Template: PCB-ANT-09
 #
 # Copyright (C) 2026 Robert Fennis
 #
@@ -20,10 +20,8 @@
 # -----------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------
-# Standard PCB Inverted-F (IFA)
+# This is a simulation model of a simple inset fed patch at 2.4GHz
 #
-# This is a simple model of a meandering IFA antenna tuned to 868MHz. 
-# We use the PCB design class to easily route the meandering line.
 #
 # The model claims approximately 4GB of RAM
 # -----------------------------------------------------------------------------

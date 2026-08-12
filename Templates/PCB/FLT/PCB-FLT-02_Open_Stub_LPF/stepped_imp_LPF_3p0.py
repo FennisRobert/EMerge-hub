@@ -1,5 +1,5 @@
 # =============================================================================
-# EMerge Simulation Template: PCB-ANT-02
+# EMerge Simulation Template: Open-Circuited Stub Low-Pass Filter
 #
 # Copyright (C) 2026 Robert Fennis
 #
@@ -16,17 +16,25 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
-#
-# -----------------------------------------------------------------------------
+# =============================================================================
 
 # -----------------------------------------------------------------------------
-# This is a simulation model of a simple inset fed patch at 2.4GHz
+# Based on / Reference Design:
+# Video: "Design of an Open-Circuited Stub Microstrip Low Pass Filter"
+# Channel: The Frequency Domain
+# Source: https://www.youtube.com/watch?v=J824cc60xpo
 #
-# The model claims approximately 4GB of RAM
+# Note: This code is an independent simulation implementation of the 5th-order 
+# Chebyshev open-stub microstrip low-pass filter design and geometry presented 
+# in the reference tutorial above.
 # -----------------------------------------------------------------------------
+
+from emerge_config import config
+config.set_acc_threads(10)
+
 import emerge as em
 import numpy as np
-from emerge.plot import plot_sp, smith, plot_ff, plot_ff_polar
+from emerge.plot import plot_sp  # + smith, plot_ff, plot_ff_polar, plot as needed
 
 ############################################################
 #                     UNITS & CONSTANTS                    #
@@ -51,26 +59,32 @@ MU0 = 1/(C0*C0*EPS0)
 #                   DESIGN / GEOMETRY PARAMETERS           #
 ############################################################
 
+# Collect all dimensions, frequencies and material properties here as named
+# variables so the geometry section below stays clean and the design is easy
+# to tweak.
 
 # --- Frequency ------------------------------------------------------------
-f0 = 2.4*GHz
-f1 = 2.2*GHz
-f2 = 2.6*GHz
-n_points = 11
+f1 = 1*GHz
+f2 = 20*GHz
+nf = 31
 
 # --- Geometry dimensions ---------------------------------------------------
 
-Wpatch = 32*mm
-Lpatch = 29.2*mm
-inset_distance = 10*mm
-inset_gap = 1*mm
-feed_length = 10*mm
-w0 = 2.88*mm
+w0, w1, wu1, w2, wu2, w3 = (1.12*mm, 0.07*mm, 0.5*mm, 2.25*mm, 0.33*mm, 2.97*mm)
+l0, l1, lu1, l2, lu2, l3 = (2.5*mm, 2.44*mm, 2.31*mm, 2.16*mm, 2.35*mm, 2.13*mm)
 
-WPCB = 60*mm
-LPCB = 70*mm
+Lf = 10*mm
+margin = 5*mm
 
-th_pcb = 1.5*mm
+
+th = 0.508*mm
+
+############################################################
+#                    MATERIAL DEFINITIONS                  #
+############################################################
+
+material = em.Material(er=3.55, tand=0.0027, color="#4bc41c", opacity=0.2)
+
 ############################################################
 #                      SIMULATION SETUP                    #
 ############################################################
@@ -83,22 +97,32 @@ model.check_version("3.0.0")  # Checks version compatibility.
 #                          GEOMETRY                        #
 ############################################################
 
-pcb = em.geo.PCB(th_pcb, 1.0, material=em.lib.DIEL_FR4)
+pcb = em.geo.PCB(th, 1.0, material=material, trace_material=em.lib.PEC)
 
-pcb.new(-feed_length, 0, w0, (1,0), 1)['port'].straight(feed_length)
+pcb.new(0,0, w0, (1,0), 1)[1].straight(l0)\
+    .stub((0,-1), w1, l1+w0/2)\
+    .straight(lu1+w2/2, wu1)\
+    .stub((0,-1), w2, l2+wu1/2)\
+    .straight(lu2+w2/2+w3/2, wu2)\
+    .stub((0,-1), w3, l3+wu2/2)\
+    .straight(lu2+w2/2+w3/2, wu2)\
+    .stub((0,-1), w2, l2+wu1/2)\
+    .straight(lu1+w2/2, wu1)\
+    .stub((0,-1), w1, l1+w0/2)\
+    .straight(l0, w0)[2]
+    
 
-patch_poly = em.geo.XYPolygon(
-    xs = [0, inset_distance, inset_distance, 0, 0, Lpatch, Lpatch, 0, 0, inset_distance, inset_distance, 0],
-    ys = [w0/2, w0/2, w0/2+inset_gap, w0/2+inset_gap, Wpatch/2, Wpatch/2, -Wpatch/2, -Wpatch/2, -w0/2-inset_gap, -w0/2-inset_gap, -w0/2, -w0/2])\
-    .geo(em.GCS).set_material(em.lib.COPPER)
-
-pcb.set_bounds(-feed_length-10*mm, -WPCB/2, -feed_length-10*mm+LPCB, WPCB/2)
 
 trace = pcb.compile_paths(True)
 
+pcb.determine_bounds(0, margin, 0, margin)
+
+p1 = pcb.modal_port(1, 1, height=4*mm)
+p2 = pcb.modal_port(2, 2, height=4*mm)
+
 diel = pcb.generate_pcb()
-air = pcb.generate_air(20*mm)
-lumped_port_face = pcb.lumped_port('port', port_number=1)
+air = pcb.generate_air(5*mm)
+
 
 ############################################################
 #                      COMMIT GEOMETRY                     #
@@ -112,35 +136,29 @@ model.commit_geometry()
 ############################################################
 
 # Set either a single frequency or a frequency sweep.
-model.mw.set_frequency_range(f1, f2, n_points)
+
+model.mw.set_frequency_range(f1, f2, nf)
 
 # Set the overall mesh resolution as a fraction of the wavelength.
 model.mw.set_resolution(0.2)
-
-# Optional: refine the mesh locally around critical features
-# (edges, ports, small gaps, vias, etc.)
-model.mesher.set_boundary_size(em.select(trace, patch_poly), 1 * mm)
-model.mesher.set_face_size(lumped_port_face, 0.5 * mm)
-
+model.mesher.set_boundary_size(trace, 0.5*mm)
 ############################################################
 #                    GENERATE & VIEW MESH                   #
 ############################################################
 
 model.generate_mesh()
-model.view(assigned_materials=True)
-model.view(plot_mesh=True)
+model.view()
+
 ############################################################
 #                    BOUNDARY CONDITIONS                    #
 ############################################################
 
-abc_boundary = air.boundary(exclude='bottom')
-model.mw.bc.AbsorbingBoundary(abc_boundary)
 
 ############################################################
 #                       RUN SIMULATION                      #
 ############################################################
 
-data = model.mw.run_sweep()
+data = model.mw.run_sweep(frequency_groups=4)
 
 ############################################################
 #                   POST-PROCESSING: S-PARAMS                #
@@ -149,30 +167,21 @@ data = model.mw.run_sweep()
 g = data.scalar.grid
 f = g.freq
 S11 = g.S(1, 1)
-plot_sp(f, [S11], labels=["S11"], dblim=[-40, 6])
-smith(S11, f)
-# supersample with Vector Fitting for smoother curves
+S21 = g.S(2, 1)
+plot_sp(f, [S11, S21], labels=["S11", "S21"], dblim=[-40, 6])
+
+# Optional: supersample with Vector Fitting for smoother curves
 fdense = g.dense_f(2001)
 S11_fit = g.model_S(1, 1, fdense)
-plot_sp(fdense, [S11_fit], labels=["S11"])
-
-############################################################
-#              POST-PROCESSING: FAR-FIELD (ANTENNAS)         #
-############################################################
-
-ff_xz = data.field.find(freq=f0).farfield_2d(em.ZAX, em.YAX, abc_boundary)
-ff_yz = data.field.find(freq=f0).farfield_2d(em.ZAX, em.XAX, abc_boundary)
-plot_ff(ff_xz.ang * 180 / np.pi, [ff_xz.gain.norm, ff_yz.gain.norm], labels=['XZ Plane','YZ Plane'], dB=True, ylabel="Gain [dBi]")
-plot_ff_polar(ff_xz.ang, ff_yz.gain.norm, dB=True, dBfloor=-20)
+S21_fit = g.model_S(2, 1, fdense)
+plot_sp(fdense, [S11_fit, S21_fit], labels=["S11", "S21"])
 
 ############################################################
 #                     3D FIELD VISUALIZATION                 #
 ############################################################
 
-field = data.field.find(freq=f0)
-ff3d = field.farfield_3d(abc_boundary)
+field = data.field.find(freq=9e9)
 display = model.display
 display.populate()
-display.add_farfield3d(ff3d, 'gain.norm', 'abs', dB=True, dBfloor=-20, rmax=50*mm, opacity=0.5)
-display.animate().add_field(field.grid(N=500_000).scalar('Ex','complex'), symmetrize=True, clim_crop_factor=0.5)
+display.animate().add_field(field.grid(N=200_000).scalar('Ez','complex'), symmetrize=True)
 display.show()

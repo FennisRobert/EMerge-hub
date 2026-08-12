@@ -54,6 +54,9 @@ mm = 0.001      # meters per millimeter
 mil = 0.0254 * mm
 inch = 25.4 * mm
 
+MHz = 1e6
+GHz = 1e9
+
 C0 = 299792458
 Z0 = 376.73031366857
 PI = 3.14159265358979323846
