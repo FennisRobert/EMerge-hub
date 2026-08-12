@@ -1,5 +1,5 @@
 # =============================================================================
-# EMerge Simulation Template: Stepped Impedance Low-Pass Filter
+# EMerge Simulation Template: Wilkinson Power Divider
 #
 # Copyright (C) 2026 Robert Fennis
 #
@@ -19,13 +19,7 @@
 # =============================================================================
 
 # -----------------------------------------------------------------------------
-# Based on / Reference Design:
-# "Design and simulation of a stepped impedance low-pass filter using Altair FEKO"
-# Author: Saranraj Karuppuswami_21591
-# Source: https://community.altair.com/discussion/33328/design-and-simulation-of-a-stepped-impedance-low-pass-filter-using-altair-feko
-#
-# Note: This file is an independent implementation of the filter geometry 
-# and parameters described in the reference post above.
+# Basic Wilkinson power divider on an 0.508mm FR4 substrate
 # -----------------------------------------------------------------------------
 from emerge_config import config
 config.set_acc_threads(10)
