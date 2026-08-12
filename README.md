@@ -41,7 +41,7 @@ We are actively building out our **Simulation Templates** library to give engine
 
 ### Active Directory Structure (`/templates`)
 
-Our templates are organized by **Technology Domain** and sub-categorized to match our main [`CHECKLIST.md`](https://www.google.com/search?q=CHECKLIST.md) tracking index:
+Our templates are organized by **Technology Domain** and sub-categorized to match our main `CHECKLIST.md` tracking index:
 
 ```text
 templates/
@@ -60,7 +60,7 @@ templates/
 
 ```
 
-> 💡 **Where do I start?** Check out [`CHECKLIST.md`](https://www.google.com/search?q=CHECKLIST.md)! It contains the master index of all planned templates, their target application, and their current status.
+> 💡 **Where do I start?** Check out `CHECKLIST.md`! It contains the master index of all planned templates, their target application, and their current status.
 
 ---
 

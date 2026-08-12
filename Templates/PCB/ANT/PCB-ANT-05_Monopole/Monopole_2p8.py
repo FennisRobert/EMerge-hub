@@ -1,5 +1,5 @@
 # =============================================================================
-# EMerge Simulation Template: PCB-ANT-01
+# EMerge Simulation Template: PCB-ANT-05 (Tuned)
 #
 # Copyright (C) 2026 Robert Fennis
 #
@@ -20,12 +20,10 @@
 # -----------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------
-# Standard PCB Planar Inverted-F (IFA)
+# Printed Quarter-Wave Monopole Antenna (Tuned for 2.4 GHz Resonance)
 #
-# This is a simple model of an IFA antenna on a 70x150mm PCB (roughly the size of an iPhone)
-# The antenna is tuned to 2.4GHz (WiFi, BLE).
-#
-# The model claims approximately 4GB of RAM
+# A planar straight-element monopole printed over a PCB ground clearance area.
+# Length adjusted from 18.2 mm to 21.5 mm to pull X=0 down from ~2.8 GHz to 2.4 GHz.
 # -----------------------------------------------------------------------------
 
 import emerge as em
@@ -36,8 +34,6 @@ from emerge.plot import plot_sp, smith, plot_ff, plot_ff_polar
 #                     UNITS & CONSTANTS                    #
 ############################################################
 
-# EMerge works in SI units internally, so it's convenient to define a few
-# unit helpers at the top of the script.
 mm = 0.001      # meters per millimeter
 mil = 0.0254 * mm
 inch = 25.4 * mm
@@ -52,78 +48,70 @@ MU0 = 1/(C0*C0*EPS0)
 #                   DESIGN / GEOMETRY PARAMETERS           #
 ############################################################
 
-
 # --- Frequency ------------------------------------------------------------
 f0 = 2.4e9
-f1 = 2.2e9
-f2 = 2.6e9
-n_points = 11
-# --- Geometry dimensions ---------------------------------------------------
+f1 = 2.3e9
+f2 = 2.5e9
+n_points = 7
 
-WPCB = 70*mm
-LPCB = 150*mm
-xpos_feed = 5*mm
-ydist = 5*mm
-want = 1*mm
-wfeed = 1*mm
-lport = 1*mm
-lant = 22.5*mm
-
+# --- PCB & Ground Dimensions -----------------------------------------------
+WPCB = 40*mm
+LPCB = 80*mm
 thpcb = 1.5*mm
+thmetal = 0.035*mm          # 1 oz copper (35 um)
+gnd_clearance = 27*mm       # Expanded ground keepout zone
+
+# --- Monopole Element Dimensions ------------------------------------------
+w_ant = 2.5*mm              # Width of printed monopole trace
+l_ant = 26*mm             # Radiating arm length (increased to achieve X = 0 at 2.4 GHz)
+l_port = 1.0*mm             # Feed gap height over ground edge
+
 air_margin = 50*mm
+
 ############################################################
 #                      SIMULATION SETUP                    #
 ############################################################
 
-
-model = em.Simulation("TemplateDemo")
-model.check_version("2.8.2")  # Checks version compatibility.
+model = em.Simulation("PrintedMonopoleTuned")
+model.check_version("2.8.3")
 
 ############################################################
 #                          GEOMETRY                        #
 ############################################################
 
-dielectric = em.geo.Box(WPCB, LPCB, thpcb, (-WPCB/2, -LPCB/2, -thpcb)).set_material(em.lib.DIEL_FR4)
+# 1. Substrate
+pcb_sub = em.geo.Box(WPCB, LPCB, thpcb, (-WPCB/2, -LPCB/2, -thpcb)).set_material(em.lib.DIEL_FR4)
 
-top_gnd = em.geo.XYPlate(WPCB, LPCB-ydist, (-WPCB/2, -LPCB/2, 0)).set_material(em.lib.COPPER)
+# 2. Ground plane (covers bottom area up to clearance boundary)
+y_gnd_edge = LPCB/2 - gnd_clearance
+gnd_plane = em.geo.Box(WPCB, LPCB - gnd_clearance, thmetal, (-WPCB/2, -LPCB/2, 0)).set_material(em.lib.COPPER)
 
-x0 = -WPCB/2
-y0 = LPCB/2-ydist
+# 3. Printed Monopole Strip
+y_ant_start = y_gnd_edge + l_port
+monopole = em.geo.Box(w_ant, l_ant, thmetal, (-w_ant/2, y_ant_start, 0)).set_material(em.lib.COPPER)
 
-ant_poly = em.geo.XYPolygon(
-    xs = [x0, x0+want, x0+want, x0 + lant, x0 + lant, x0],
-    ys = [y0, y0, y0+ydist-want, y0+ydist-want, y0+ydist, y0+ydist],).geo(em.GCS).set_material(em.lib.COPPER)
+# 4. Port Plate (spans the gap from ground edge to monopole base)
+ant_port = em.geo.Plate((-w_ant/2, y_gnd_edge, 0), (w_ant, 0, 0), (0, l_port, 0))
 
-ant_feed = em.geo.XYPlate(wfeed, ydist-wfeed-lport, (x0+xpos_feed-wfeed/2, y0+lport, 0)).set_material(em.lib.COPPER)
-
-ant_poly = em.geo.add(ant_poly, ant_feed)
-ant_port = em.geo.XYPlate(wfeed, lport, (x0+xpos_feed-wfeed/2, y0, 0))
-
-
-air = em.geo.open_region(air_margin,air_margin,air_margin)
-
+# 5. Air Box Domain
+air = em.geo.open_region(air_margin, air_margin, air_margin)
 
 ############################################################
 #                      COMMIT GEOMETRY                     #
 ############################################################
 
-# Once the geometry is finalized, hand it over to the solver.
 model.commit_geometry()
 
 ############################################################
 #                    SOLVER / MESH SETTINGS                 #
 ############################################################
 
-# Set either a single frequency or a frequency sweep.
 model.mw.set_frequency_range(f1, f2, n_points)
-
-# Set the overall mesh resolution as a fraction of the wavelength.
 model.mw.set_resolution(0.2)
 
-# Optional: refine the mesh locally around critical features
-# (edges, ports, small gaps, vias, etc.)
-model.mesher.set_boundary_size(ant_poly, 0.5 * mm)
-model.mesher.set_face_size(ant_port, 0.5 * mm)
+# Local mesh refinements
+model.mesher.set_boundary_size(monopole, 0.5 * mm)
+model.mesher.set_face_size(ant_port, 0.25 * mm)
 
 ############################################################
 #                    GENERATE & VIEW MESH                   #
@@ -136,7 +124,7 @@ model.view()
 #                    BOUNDARY CONDITIONS                    #
 ############################################################
 
-model.mw.bc.LumpedPort(ant_port, 1, width=wfeed, height=lport, direction=em.YAX)
+model.mw.bc.LumpedPort(ant_port, 1, width=w_ant, height=l_port, direction=em.YAX)
 model.mw.bc.AbsorbingBoundary(air.boundary())
 
 ############################################################
@@ -154,18 +142,19 @@ f = g.freq
 S11 = g.S(1, 1)
 plot_sp(f, [S11], labels=["S11"], dblim=[-40, 6])
 smith(S11, f)
-# supersample with Vector Fitting for smoother curves
+
+# Vector Fitting interpolation
 fdense = g.dense_f(2001)
 S11_fit = g.model_S(1, 1, fdense)
-plot_sp(fdense, [S11_fit], labels=["S11"])
+plot_sp(fdense, [S11_fit], labels=["S11 Fitted"])
 
 ############################################################
 #              POST-PROCESSING: FAR-FIELD (ANTENNAS)         #
 ############################################################
 
-ff_xy = data.field.find(freq=f0).farfield_2d(em.XAX, em.ZAX, air.boundary())
-ff_xz = data.field.find(freq=f0).farfield_2d(em.XAX, em.YAX, air.boundary())
-plot_ff(ff_xy.ang * 180 / np.pi, [ff_xy.gain.norm, ff_xz.gain.norm], labels=['XY Plane','XZ Plane'], dB=True, ylabel="Gain [dBi]")
+ff_xy = data.field.find(freq=f0).farfield_2d(em.XAX, em.YAX, air.boundary())
+ff_xz = data.field.find(freq=f0).farfield_2d(em.XAX, em.ZAX, air.boundary())
+plot_ff(ff_xy.ang * 180 / np.pi, [ff_xy.gain.norm, ff_xz.gain.norm], labels=['XY Plane', 'XZ Plane'], dB=True, ylabel="Gain [dBi]")
 plot_ff_polar(ff_xy.ang, ff_xy.gain.norm, dB=True, dBfloor=-20)
 
 ############################################################
@@ -177,5 +166,5 @@ ff3d = field.farfield_3d(air.boundary())
 display = model.display
 display.populate()
 display.add_farfield3d(ff3d, 'gain.norm', 'abs', dB=True, dBfloor=-20, rmax=50*mm, opacity=0.5)
-display.animate().add_field(field.grid(N=100_000).scalar('Ex','complex'), symmetrize=True, clim_crop_factor=0.1)
+display.animate().add_field(field.grid(N=100_000).scalar('Ey', 'complex'), symmetrize=True, clim_crop_factor=0.5)
 display.show()
