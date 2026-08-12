@@ -18,8 +18,8 @@ This checklist tracks community-contributed simulation templates for **EMerge**.
 | `PCB-ANT-06` | **Meander-Line Monopole** | Microstrip Edge | Sub-GHz (433/868 MHz) LoRa & RFID. | - [x] | - [x] | Robert Fennis |
 | `PCB-ANT-07` | **Inverted-L Antenna (ILA)** | Microstrip Edge | Compact single-band planar antenna. | - [ ] | - [ ] |  |
 | `PCB-ANT-08` | **Ceramic Chip Antenna Model** | SMT Pad + Keepout | Simulates chip antenna with PCB keep-out. | - [ ] | - [ ] |  |
-| `PCB-ANT-09` | **Inset-Fed Rectangular Patch** | Microstrip Edge (Inset) | Impedance matching via inset depth. | - [ ] | - [ ] |  |
-| `PCB-ANT-10` | **Quarter-Wave Transformer Patch** | Microstrip Edge | Transmission line matching example. | - [ ] | - [ ] |  |
+| `PCB-ANT-09` | **Inset-Fed Rectangular Patch** | Microstrip Edge (Inset) | Impedance matching via inset depth. | - [x] | - [x] | Robert Fennis |
+| `PCB-ANT-10` | **Quarter-Wave Transformer Patch** | Microstrip Edge | Transmission line matching example. | - [x] | - [x] | Robert Fennis |
 | `PCB-ANT-11` | **Coaxial Probe-Fed Patch** | Coax Pin thru Ground | GPS receivers and high-power boards. | - [ ] | - [ ] |  |
 | `PCB-ANT-12` | **Aperture-Coupled Patch** | Bottom Layer Microstrip | Multi-layer stackups and high isolation. | - [ ] | - [ ] |  |
 | `PCB-ANT-13` | **Probe-Fed Circular Patch** | Coax Probe | Circular geometry mesh test; radar/GPS. | - [ ] | - [ ] |  |
