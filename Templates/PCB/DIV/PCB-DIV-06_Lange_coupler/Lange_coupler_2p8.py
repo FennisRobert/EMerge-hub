@@ -26,6 +26,7 @@
 # The model as is is not perfectly tuned for good performance. I (Robert) who made
 # The model does not know a whole lot about Lange couplers so, feel free to improve on it!
 # -----------------------------------------------------------------------------
+
 import emerge as em
 import numpy as np
 from emerge.plot import plot_sp  # + smith, plot_ff, plot_ff_polar, plot as needed
@@ -83,20 +84,20 @@ th = 0.258*mm
 
 
 model = em.Simulation("TemplateDemo")
-model.check_version("3.0.0")  # Checks version compatibility.
+model.check_version("2.8.3")  # Checks version compatibility.
 
 ############################################################
 #                          GEOMETRY                        #
 ############################################################
 
-pcb = em.geo.PCB(th, 1.0, material=em.lib.DIEL_FR4, trace_material=em.lib.PEC)
+pcb = em.geo.PCBNew(th, 1.0, material=em.lib.DIEL_FR4, trace_material=em.lib.PEC)
 
 print(pcb.calc.z0(50)*1000)
-pcb.new(-Lf-w0,-Lh-w0/2-ds-w1, w0, (1,0), 1)[1].straight(Lf).turn(-90, corner_type='champher').straight(ds)
-pcb.new(-Lf-w0, Lh+w0/2+ds+w1, w0, (1,0), 1)[2].straight(Lf-2*w1).turn(90, corner_type='champher').straight(ds)
+pcb.new(-Lf-w0,-Lh-w0/2-ds-w1, w0, (1,0), z=pcb.z(1))[1].straight(Lf).turn(-90, corner_type='champher').straight(ds)
+pcb.new(-Lf-w0, Lh+w0/2+ds+w1, w0, (1,0), z=pcb.z(1))[2].straight(Lf-2*w1).turn(90, corner_type='champher').straight(ds)
 
-pcb.new(Lf+w0-w1,-Lh-w0/2-ds-w1, w0, (-1,0), 1)[3].straight(Lf-2*w1).turn(90, corner_type='champher').straight(ds)
-pcb.new(Lf+w0-w1, Lh+w0/2+ds+w1, w0, (-1,0), 1)[4].straight(Lf).turn(-90, corner_type='champher').straight(ds)
+pcb.new(Lf+w0-w1,-Lh-w0/2-ds-w1, w0, (-1,0), z=pcb.z(1))[3].straight(Lf-2*w1).turn(90, corner_type='champher').straight(ds)
+pcb.new(Lf+w0-w1, Lh+w0/2+ds+w1, w0, (-1,0), z=pcb.z(1))[4].straight(Lf).turn(-90, corner_type='champher').straight(ds)
 
 
 poly1 = pcb.plane(pcb.z(1), w1, Lt+2*w1, (-w1, -Lh-w1))
@@ -110,10 +111,10 @@ metal = em.geo.unite(poly1, poly2, poly3, poly4, poly5, trace)
 
 pcb.determine_bounds(margin, margin, margin, margin)
 
-p1 = pcb.lumped_port(1, 1)
-p2 = pcb.lumped_port(2, 2)
-p3 = pcb.lumped_port(3, 3)
-p4 = pcb.lumped_port(4, 4)
+p1 = pcb.lumped_port(1)
+p2 = pcb.lumped_port(2)
+p3 = pcb.lumped_port(3)
+p4 = pcb.lumped_port(4)
 
 le = pcb.lumped_elements
 diel = pcb.generate_pcb()
@@ -149,7 +150,7 @@ model.mw.set_frequency_range(f1, f2, nf)
 
 # Set the overall mesh resolution as a fraction of the wavelength.
 model.mw.set_resolution(0.2)
-model.mesher.set_boundary_size(metal, 0.05*mm, growth_rate=5)
+model.mesher.set_boundary_size(metal, 0.1*mm, growth_rate=5)
 model.mesher.set_domain_size(wires, r0b)
 
 ############################################################
@@ -163,6 +164,10 @@ model.view()
 #                    BOUNDARY CONDITIONS                    #
 ############################################################
 
+lp1 = model.mw.bc.LumpedPort(p1, 1)
+lp2 = model.mw.bc.LumpedPort(p2, 2)
+lp3 = model.mw.bc.LumpedPort(p3, 3)
+lp4 = model.mw.bc.LumpedPort(p4, 4)
 
 ############################################################
 #                       RUN SIMULATION                      #
