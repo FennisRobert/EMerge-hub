@@ -1,9 +1,11 @@
 # Welcome to EMerge Hub!
-(this README is generated with the help of Google Gemini because I suck at writing :) Feel free to make edits )
+Hello visitors! Welcome to EMerge-hub, a platform/repository where I want to share as many useful stuff with the community relating to the EMerge solver as possible.
 
-Welcome to **EMerge Hub**,  the official companion repository, model library, and community playground for **EMerge**, the open-source Python-based Finite Element Method (FEM) full-wave electromagnetic solver!
+My dream for EMerge hub is to turn into a gigantic database of example files, tutorials and other design resources that everybody on the planet can use to learn about and develop their EM simulation skills (specifically applied ot EMerge).
 
-Whether you're looking for a ready-to-run 2.4 GHz Bluetooth antenna script, a quick microstrip filter layout, or an RF boilerplate to kickstart your own simulation, you've come to the right place.
+For now, we are focussing on building out the Templates directory, just a large list of simulation files for every possible RF component imaginable.
+
+The idea for EMerge-hub is to be very much community driven. While helping working on the FEM solver may be more difficult, contributing with example files, templates and other simulation utilities may not be! Lets build this amazing repository together!
 
 # EMerge versions and installation
 The current latest version of EMerge is 2.8. This version is on PyPI. I am working on version 3.0 on branch `v3.0-dev`. Files may be written for 3.0 already. I try to keep it stable.
@@ -26,6 +28,8 @@ pip install git+https://github.com/FennisRobert/EMerge.git@v3.0-dev
 pip install git+https://github.com/FennisRobert/EMerge.git@v3.0-dev
 pip install git+https://github.com/FennisRobert/emerge-aasds
 ```
+
+
 ## What is in this hub?
 The hub contains many resources for people who want to get started with EMerge. It was created on August 11th 2026 so its mostly empty. It will be filled as time goes on.
 * **`Template/`**: A directory with all sorts of template files for different passive RF components that you can use to model your design of choice.
@@ -34,6 +38,7 @@ The hub contains many resources for people who want to get started with EMerge. 
 * **`Benchmarks/`**: High-precision validation models against textbook analytical solutions and published papers.
 * **`Tutorials/`**: Step-by-step interactive Jupyter Notebooks designed to guide non-RF engineers through full-wave simulation from scratch.
 
+Most of these are to come. Feel free to initiate Pull Requests to add features. Because the repository is largely consisting of separate files etc, its very easy for me to move things around in folders later on without the fear of breaking anything. So do shy away of just adding something where you believe it should be. I'll clean things up later.
 
 ## Exploring the Hub
 
@@ -60,7 +65,7 @@ templates/
 
 ```
 
-> 💡 **Where do I start?** Check out `CHECKLIST.md`! It contains the master index of all planned templates, their target application, and their current status.
+> **Where do I start?** Check out `CHECKLIST.md`! It contains the master index of all planned templates, their target application, and their current status. If something is missing, feel free to add it!
 
 ---
 
