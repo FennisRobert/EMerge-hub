@@ -23,6 +23,7 @@
 # The 'Hello World' of antenna simulations. Simulates a basic Half-
 # Wave Center-Fed Dipole operating at 1Ghz and outputs the antenna gain charts
 # as well as an E-field 3d visualization
+# Uses up to 6GB
 # -----------------------------------------------------------------------------
 
 import emerge as em
@@ -58,14 +59,13 @@ MU0 = 1/(C0*C0*EPS0)
 
 # --- Frequency ------------------------------------------------------------
 f0 = 1e9       # center / operating frequency (Hz)
-# f1, f2 = ..., ...   # sweep start/stop, if using a frequency range
 
 # --- Geometry dimensions ---------------------------------------------------
-airbox_hght = 500 * mm
-airbox_wdth = 300 * mm
-airbox_dpt = 300 * mm
+airbox_hght = 200 * mm
+airbox_wdth = 150 * mm
+airbox_dpt = 150 * mm
 
-antenna_height = 300*mm
+antenna_height = 143*mm
 antenna_radius = 1*mm
 
 cut_port_height = 1*mm
@@ -74,37 +74,28 @@ cut_port_radius = 1*mm
 port_width = 2 * mm
 port_height = 1 * mm
 
-
-############################################################
-#                    MATERIAL DEFINITIONS                  #
-############################################################
-
-# mymat = em.Material(er=er, tand=tand, color="#217627", opacity=0.3)
-
 ############################################################
 #                      SIMULATION SETUP                    #
 ############################################################
 
 
 model = em.Simulation('HalfWaveDipole')
-model.check_version("2.8.2")  # Checks version compatibility.
+model.check_version("3.0.0")  # Checks version compatibility.
 
 ############################################################
 #                          GEOMETRY                        #
 ############################################################
 
-airbox = em.geo.Box(airbox_wdth, airbox_dpt, airbox_hght,  position=(-(airbox_wdth/2),
-                                                                     -(airbox_dpt/2),
-                                                                    -100*mm))
-half_wave_dipole = em.geo.Cylinder(antenna_radius,antenna_height)
-port_cut = em.geo.Cylinder(cut_port_radius,cut_port_height)
-port_cut = em.geo.translate(port_cut, dx=0, dy=0, dz=149.5*mm)
+airbox = em.geo.Box(airbox_wdth, airbox_dpt, airbox_hght,  alignment=em.CENTER)
+half_wave_dipole = em.geo.Cylinder(antenna_radius,antenna_height, cs=em.cs(origin=(0,0,-antenna_height/2)))
+port_cut = em.geo.Cylinder(cut_port_radius,cut_port_height, cs=em.cs(origin=(0,0,-cut_port_height/2)))
 half_wave_dipole = em.geo.subtract(half_wave_dipole, port_cut)
 
-port = em.geo.Plate((-1*mm, 0*mm, 149.5*mm),(2*mm,0,0),(0,0,1*mm))
+port = em.geo.Plate((-1*mm, 0*mm, -0.5*mm),(2*mm,0,0),(0,0,1*mm))
 
 half_wave_dipole.set_material(em.lib.PEC)
 
+model.view(use_gmsh=True)
 ############################################################
 #                      COMMIT GEOMETRY                     #
 ############################################################
@@ -122,20 +113,14 @@ model.mw.set_frequency(f0)
 # Set the overall mesh resolution as a fraction of the wavelength.
 model.mw.set_resolution(0.2)
 
-# Optional: refine the mesh locally around critical features
-# (edges, ports, small gaps, vias, etc.)
-# model.mesher.set_boundary_size(<selection>, 0.5 * mm)
-# model.mesher.set_face_size(<selection>, 0.5 * mm)
-# model.mesher.set_domain_size(<selection>, 1 * mm)
 
 ############################################################
 #                    GENERATE & VIEW MESH                   #
 ############################################################
 
-
-model.view()
 model.generate_mesh()
 
+model.view(plot_mesh=True)
 ############################################################
 #                    BOUNDARY CONDITIONS                    #
 ############################################################
@@ -154,17 +139,13 @@ data = model.mw.run_sweep()
 #                   POST-PROCESSING: S-PARAMS                #
 ############################################################
 
-#g = data.scalar.grid
-#f = g.freq
-#S11 = g.S(1, 1)
-#S21 = g.S(2, 1)
-#plot_sp(f, [S11, S21], labels=["S11", "S21"], dblim=[-40, 6])
+g = data.scalar.grid
 
-# Optional: supersample with Vector Fitting for smoother curves
-# fdense = g.dense_f(2001)
-# S11_fit = g.model_S(1, 1, fdense)
-# S21_fit = g.model_S(2, 1, fdense)
-# plot_sp(fdense, [S11_fit, S21_fit], labels=["S11", "S21"])
+S11 = g.S(1,1)[0]
+S11dB = 20*np.log10(np.abs(S11))
+Zload = 50*((1+S11)/(1-S11))
+print(f'S11 = {S11dB:.1f} dB')
+print(f'Load impedance = {Zload:.1f} Ω')
 
 ############################################################
 #              POST-PROCESSING: FAR-FIELD (ANTENNAS)         #
