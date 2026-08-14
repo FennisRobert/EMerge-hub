@@ -1,7 +1,7 @@
 # =============================================================================
-# EMerge Simulation Template: [Model Name / ID]
+# EMerge Simulation Template: Folded Dipole
 #
-# Copyright (C) [Year] [Author Name or GitHub Handle]
+# Copyright (C) 2026 Robert Fennis
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,32 +17,18 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# -----------------------------------------------------------------------------
-# AI ASSISTANCE NOTICE (Uncomment if generated/assisted by an LLM):
-# This script was generated or assisted using Large Language Models (LLMs).
-# In accordance with EU copyright principles, pure AI-generated output resides 
-# in the public domain (CC0 1.0 Universal). Human edits, architectural layout,
-# and solver integrations are licensed under GNU GPL v2.
 # =============================================================================
 
 # -----------------------------------------------------------------------------
-# <SHORT, CATCHY TITLE OF THE DEMO> (e.g. "Grounded Coplanar Waveguide Filter")
-#
-# <One or two sentence summary of what this demo shows and why it's
-#  interesting/useful. Mention the EMerge feature(s) being highlighted,
-#  e.g. "This demo shows how to use the PCBLayouter to route a stripline
-#  filter and extract its S-parameters."
-#
-#  Optional extras worth including here:
-#   - Reference to a textbook / paper / video the design is based on
-#   - Expected RAM / runtime if the simulation is heavy
-#   - Author credit, e.g. "Demo by <name>"
-#   - Any known caveats (e.g. "resonance is a bit low due to coarse mesh")
+# This simulation model creates a Folded Dipole with a 300Ω input impedance.
+# The dipole is modeled using a BSpline with coordinates and control points chosen accordingly.
+# 
+# It currently cannot run in 2.8 due the the lack of multiplicities input.
+# It requires up to 10GB of RAM.
 # -----------------------------------------------------------------------------
-
 import emerge as em
 import numpy as np
-from emerge.plot import plot_sp  # + smith, plot_ff, plot_ff_polar, plot as needed
+from emerge.plot import plot_sp, smith, plot_ff, plot_ff_polar, plot
 
 ############################################################
 #                     UNITS & CONSTANTS                    #
@@ -72,12 +58,77 @@ MU0 = 1/(C0*C0*EPS0)
 # to tweak.
 
 # --- Frequency ------------------------------------------------------------
-f0 = 10e9       # center / operating frequency (Hz)
-# f1, f2 = ..., ...   # sweep start/stop, if using a frequency range
+f0 = 1.45e9       # center / operating frequency (Hz)
+f1 = 1.2e9
+f2 = 1.7e9
+nfreq = 21
 
 # --- Geometry dimensions ---------------------------------------------------
 
+Zsource = 300.0
 
+radius = 0.35*mm
+Lhalf = 44.1*mm
+rad = 6.1*mm
+gap = 0.5*mm
+
+x_left = 0.0
+x_mid = rad
+x_right = 2 * rad
+y_gap = gap / 2.0
+
+degree = 2
+w_arc = np.sqrt(2) / 2
+
+air_margin = 40*mm
+
+# --- 15 Control Points (exact geometry, every piece its own Bezier) -------
+xs_path = np.array([
+    x_left,   # 0  gap top
+    x_left,   # 1  mid of upper-left leg
+    x_left,   # 2  top of left leg          (shared: line1 end / arc1 start)
+    x_left,   # 3  top-left tangent corner
+    x_mid,    # 4  top apex                 (shared: arc1 end / arc2 start)
+    x_right,  # 5  top-right tangent corner
+    x_right,  # 6  top of right leg         (shared: arc2 end / line2 start)
+    x_right,  # 7  mid of right leg
+    x_right,  # 8  bottom of right leg      (shared: line2 end / arc3 start)
+    x_right,  # 9  bot-right tangent corner
+    x_mid,    # 10 bottom apex              (shared: arc3 end / arc4 start)
+    x_left,   # 11 bot-left tangent corner
+    x_left,   # 12 bottom of left leg       (shared: arc4 end / line3 start)
+    x_left,   # 13 mid of lower-left leg
+    x_left,   # 14 gap bottom
+])
+
+zs_path = np.array([
+    y_gap,
+    (y_gap + Lhalf) / 2.0,
+    Lhalf,
+    Lhalf + rad,
+    Lhalf + rad,
+    Lhalf + rad,
+    Lhalf,
+    0.0,
+    -Lhalf,
+    -(Lhalf + rad),
+    -(Lhalf + rad),
+    -(Lhalf + rad),
+    -Lhalf,
+    -(Lhalf + y_gap) / 2.0,
+    -y_gap,
+])
+
+weights = np.array([
+    1.0, 1.0, 1.0,
+    w_arc, 1.0, w_arc,
+    1.0, 1.0, 1.0,
+    w_arc, 1.0, w_arc,
+    1.0, 1.0, 1.0,
+])
+
+knots = np.array([0, 1, 2, 3, 4, 5, 6, 7], dtype=float)
+multiplicities = np.array([3, 2, 2, 2, 2, 2, 2, 3], dtype=int)
 
 ############################################################
 #                    MATERIAL DEFINITIONS                  #
@@ -91,12 +142,19 @@ f0 = 10e9       # center / operating frequency (Hz)
 
 
 model = em.Simulation("TemplateDemo")
-model.check_version("2.8.2")  # Checks version compatibility.
+model.check_version("3.0.0")  # Checks version compatibility.
 
 ############################################################
 #                          GEOMETRY                        #
 ############################################################
 
+disc = em.geo.XYPolygon.circle(radius, Nsections=8)
+path = em.geo.Curve(xs_path, 0*xs_path, zs_path, ctype="BSpline",
+                    weights=weights, knots=knots, multiplicities=multiplicities, degree=degree).pipe(disc).set_material(em.lib.COPPER)
+
+port = em.geo.Cylinder(radius, gap, em.cs(origin=(0,0,-gap/2)))
+
+air = em.geo.open_region(air_margin, air_margin, air_margin)
 
 ############################################################
 #                      COMMIT GEOMETRY                     #
@@ -110,29 +168,26 @@ model.commit_geometry()
 ############################################################
 
 # Set either a single frequency or a frequency sweep.
-model.mw.set_frequency(f0)
-# model.mw.set_frequency_range(f1, f2, n_points)
+model.mw.set_frequency_range(f1, f2, nfreq)
 
 # Set the overall mesh resolution as a fraction of the wavelength.
 model.mw.set_resolution(0.2)
-
-# Optional: refine the mesh locally around critical features
-# (edges, ports, small gaps, vias, etc.)
-# model.mesher.set_boundary_size(<selection>, 0.5 * mm)
-# model.mesher.set_face_size(<selection>, 0.5 * mm)
-# model.mesher.set_domain_size(<selection>, 1 * mm)
 
 ############################################################
 #                    GENERATE & VIEW MESH                   #
 ############################################################
 
 model.generate_mesh()
-model.view()
+model.view(plot_mesh=True)
 
 ############################################################
 #                    BOUNDARY CONDITIONS                    #
 ############################################################
 
+boundary_selection = air.boundary()
+
+port = model.mw.bc.LumpedPort(port.shell, 1, 2*PI*radius, gap, em.ZAX, Z0=Zsource)
+abc = model.mw.bc.AbsorbingBoundary(boundary_selection)
 
 ############################################################
 #                       RUN SIMULATION                      #
@@ -144,30 +199,39 @@ data = model.mw.run_sweep()
 #                   POST-PROCESSING: S-PARAMS                #
 ############################################################
 
-# g = data.scalar.grid
-# f = g.freq
-# S11 = g.S(1, 1)
-# S21 = g.S(2, 1)
-# plot_sp(f, [S11, S21], labels=["S11", "S21"], dblim=[-40, 6])
+g = data.scalar.grid
 
-# Optional: supersample with Vector Fitting for smoother curves
-# fdense = g.dense_f(2001)
-# S11_fit = g.model_S(1, 1, fdense)
-# S21_fit = g.model_S(2, 1, fdense)
-# plot_sp(fdense, [S11_fit, S21_fit], labels=["S11", "S21"])
+S11 = g.S(1,1)
+
+plot_sp(g.freq, S11)
+smith(S11, g.freq)
+
+Zload = Zsource*((1+S11)/(1-S11))
+
+plot(g.freq/GHz, [Zload.real, Zload.imag], labels=['Real','Imag'], xlabel="Frequency (GHz)", ylabel="Load Impedance (Ω)")
 
 ############################################################
 #              POST-PROCESSING: FAR-FIELD (ANTENNAS)         #
 ############################################################
 
-# ff = data.field.find(freq=f0).farfield_2d((1, 0, 0), (0, 1, 0), <boundary>)
-# plot_ff(ff.ang * 180 / np.pi, ff.gain.norm, dB=True, ylabel="Gain [dBi]")
-# plot_ff_polar(ff.ang, ff.gain.norm, dB=True, dBfloor=-20)
+ff = data.field.find(freq=f0).farfield_2d((1, 0, 0), (0, 1, 0), boundary_selection)
+plot_ff(ff.ang * 180 / np.pi, ff.gain.norm, dB=True, ylabel="Gain [dBi]")
+plot_ff_polar(ff.ang, ff.gain.norm, dB=True, dBfloor=-40)
 
 ############################################################
 #                     3D FIELD VISUALIZATION                 #
 ############################################################
 
+### Note - this is a visualization of the E-field magnitude not
+### antenna gain
+
+# # Add geometry for context
+model.display.populate()
 field = data.field.find(freq=f0)
-display = model.display
-display.populate()
+# # Compute full 3D far-field (at the same frequency) and display
+ff3d = field.farfield_3d(boundary_selection)
+model.display.add_farfield3d(ff3d, dB='True', rmax=150*mm / 2, offset=(0, 0, 150*mm), opacity=0.4)
+model.display.animate().add_field(field.grid(N=200_00).scalar('Ez','complex'), symmetrize=True)
+#
+# # Show interactive 3D scene
+model.display.show()
