@@ -55,7 +55,7 @@ This checklist tracks community-contributed simulation templates for **EMerge**.
 | `PCB-DIV-02` | **Gysel Power Divider** | Microstrip | High-power alternative to Wilkinson. | - [ ] | - [ ] |  |
 | `PCB-DIV-03` | **Branchline Coupler (90° Hybrid)** | Microstrip | Quadrature phase generation for mixers. | - [x] | - [x] | Robert Fennis |
 | `PCB-DIV-04` | **Rat-Race Coupler (180° Hybrid)** | Microstrip | Sum and difference monopulse networks. | - [x] | - [x] | Robert Fennis |
-| `PCB-DIV-05` | **Edge-Coupled Directional Coupler** | Microstrip | Power monitoring and SWR detection. | - [ ] | - [ ] | Robert Fennis |
+| `PCB-DIV-05` | **Edge-Coupled Directional Coupler** | Microstrip | Power monitoring and SWR detection. | - [x] | - [x] | Robert Fennis |
 | `PCB-DIV-06` | **Lange Coupler** | Microstrip + Wirebonds | Multi-octave bandwidth; tests wire bridges. | - [x] | - [x] | Robert Fennis |
 
 ### 1.4 PCB Interconnects, Routing & Transitions
@@ -107,7 +107,7 @@ This checklist tracks community-contributed simulation templates for **EMerge**.
 | ID | Model Name | Feed Strategy | Target Application / Notes | v2.8 | v3.0 | Contributor |
 | --- | --- | --- | --- | --- | --- | --- |
 | `WIR-ANT-01` | **Half-Wave Center-Fed Dipole** | Discrete Gap Port | "Hello World" baseline EM antenna. | - [X] | - [x] | Michael Burbidge |
-| `WIR-ANT-02` | **Folded Dipole Antenna** | Discrete Gap Port | $300\ \Omega$ feed antenna for broadcast TV. | - [ ] | - [ ] |  |
+| `WIR-ANT-02` | **Folded Dipole Antenna** | Discrete Gap Port | $300\ \Omega$ feed antenna for broadcast TV. | - [ ] | - [ Robert Fennis ] |  |
 | `WIR-ANT-03` | **Wire Monopole on Finite Ground** | Coax Base Feed | Ground plane edge diffraction benchmark. | - [ ] | - [ ] |  |
 | `WIR-ANT-04` | **3-Element Yagi-Uda Antenna** | Discrete Gap Port | Parasitic director and reflector dynamics. | - [ ] | - [ ] |  |
 | `WIR-ANT-05` | **Electrically Small Wire Loop** | Discrete Gap Port | Near-field magnetic sensing / NFC baseline. | - [ ] | - [ ] |  |

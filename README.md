@@ -19,13 +19,13 @@ pip install emerge
 pip install emerge
 pip install git+https://github.com/FennisRobert/emerge-aasds
 ```
-### Version 3.0 Installation:
+### Version 3.0 Alpha release Installation:
 ```bash
 # Windows + Linux
-pip install git+https://github.com/FennisRobert/EMerge.git@v3.0-dev
+pip install --pre emerge
 
 # MacOS
-pip install git+https://github.com/FennisRobert/EMerge.git@v3.0-dev
+pip install --pre emerge
 pip install git+https://github.com/FennisRobert/emerge-aasds
 ```
 
