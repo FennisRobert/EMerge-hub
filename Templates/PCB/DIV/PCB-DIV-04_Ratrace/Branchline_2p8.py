@@ -1,5 +1,5 @@
 # =============================================================================
-# EMerge Simulation Template: Wilkinson Power Divider
+# EMerge Simulation Template: Ratrace Coupler
 #
 # Copyright (C) 2026 Robert Fennis
 #
@@ -19,10 +19,15 @@
 # =============================================================================
 
 # -----------------------------------------------------------------------------
-# Optimized branchline coupler at 3.0 GHz
-# We use the offset options (dx, dy) of the .straight() command to realize asymmetric tapers
-# We also use the symmetric .taper() function to minimize the junction capacitance.
-#
+# This design is the most basic Ratrace coupler possible. The Ratrace
+# coupler consists of a 6 x ¼λ circupherence path with 4 ports.
+# The ports are counted 1 (all to the right) and then counting up
+# to 4 going counter-clockwise with port 4 pointing to the left.
+# This turns the ports into:
+#  Port 1: In/out 1
+#  Port 2: Out/in Sum (Σ)
+#  Port 3: In/out 2
+#  Port 4: Out/in Delta (Δ)
 # -----------------------------------------------------------------------------
 from emerge_config import config
 config.set_acc_threads(4)
@@ -60,22 +65,22 @@ MU0 = 1/(C0*C0*EPS0)
 
 # --- Frequency ------------------------------------------------------------
 f0 = 3.0*GHz
-f1 = 2.5*GHz
-f2 = 3.5*GHz
+f1 = 2.0*GHz
+f2 = 4.0*GHz
 nf = 21
 
 # --- Geometry dimensions ---------------------------------------------------
 
 w0 = 0.98*mm
-w1 = 1.7067*mm
+w1 = 0.51*mm
 
 Lf = 5*mm
 Lq = 14*mm
-Lv = 14*mm
-dx = 2*mm
-dy = 2*mm
-o = (w1-w0)/2
-w3 = w0*0.5
+circ = 6*Lq
+rad = circ/(2*PI)
+ro = rad + w1/2
+ri = rad - w1/2
+
 margin = 5*mm
 
 th = 0.508*mm
@@ -94,17 +99,21 @@ model.check_version("2.8.3")  # Checks version compatibility.
 
 pcb = em.geo.PCBNew(th, 1.0, material=em.lib.DIEL_FR4, trace_material=em.lib.PEC)
 
-print(f'z0 50 = {pcb.calc.z0(50)*1000:.2f}mm')
-print(f'z0 50 = {pcb.calc.z0(50/2**0.5)*1000:.2f}mm')
+for i in (1,2,3,4):
+    dx = np.cos((i-1)*PI/3)
+    dy = np.sin((i-1)*PI/3)
+    pcb.new(rad*dx, rad*dy, w0, (dx,dy), pcb.z(1)).straight(Lf)[i]
 
-pcb.new(0, 0, w0,(1,0), pcb.z(1))[1].straight(Lf)['m1'].straight(Lq-2*dx, w1, dx=dx, dy=o).straight(0, w0, dx=dx, dy=-o)['m2'].straight(Lf, w0)[3]
-pcb.new(0,-Lv,w0,(1,0), pcb.z(1))[2].straight(Lf).straight(Lq-2*dx, w1, dx=dx, dy=-o).straight(0, w0, dx=dx, dy=o).straight(Lf, w0)[4]
-pcb.new(*pcb['m1'].xy, w3, (0,-1), pcb.z(1)).taper(dy, w0).straight(Lv-2*dy).taper(dy, w3)
-pcb.new(*pcb['m2'].xy, w3, (0,-1), pcb.z(1)).taper(dy, w0).straight(Lv-2*dy).taper(dy, w3)
+disc_out = em.geo.Disc((0,0,0), ro)
+disc_in = em.geo.Disc((0,0,0), ri)
+ring = em.geo.subtract(disc_out, disc_in).set_material(em.lib.PEC)
+
+print(f'z0 50 = {pcb.calc.z0(50)*1000:.2f}mm')
+print(f'z0 50 = {pcb.calc.z0(50*1.414)*1000:.2f}mm')
 
 trace = pcb.compile_paths(True)
 
-pcb.determine_bounds(margin, margin,margin, margin)
+pcb.determine_bounds(margin, margin, margin, margin+rad)
 
 p1 = pcb.lumped_port(1)
 p2 = pcb.lumped_port(2)
@@ -115,6 +124,7 @@ le = pcb.lumped_elements
 diel = pcb.generate_pcb()
 air = pcb.generate_air(5*mm)
 
+trace = em.geo.add(trace, ring)
 
 ############################################################
 #                      COMMIT GEOMETRY                     #
@@ -145,7 +155,6 @@ model.view()
 #                    BOUNDARY CONDITIONS                    #
 ############################################################
 
-
 lp1 = model.mw.bc.LumpedPort(p1, 1)
 lp2 = model.mw.bc.LumpedPort(p2, 2)
 lp3 = model.mw.bc.LumpedPort(p3, 3)
@@ -170,18 +179,25 @@ S41 = g.S(4, 1)
 
 plot_sp(f, [S11, S21, S31, S41], labels=["S11", "S21","S31","S41"], dblim=[-40, 6])
 
-total = np.abs(S31)**2 + np.abs(S41)**2
-ratio_3 = np.abs(S31)**2/total
+total = np.abs(S21)**2 + np.abs(S41)**2
+ratio_2 = np.abs(S21)**2/total
 ratio_4 = np.abs(S41)**2/total
 
-plot(f/GHz, [ratio_3, ratio_4], labels=['P3/Ptot','P4/Ptot'], xlabel='Frequency (GHz)',ylabel='Power Ratio', ylim=[0,1])
+plot(f/GHz, [ratio_2, ratio_4], labels=['P2/Ptot','P4/Ptot'], xlabel='Frequency (GHz)',ylabel='Power Ratio', ylim=[0,1])
+
 ############################################################
 #                     3D FIELD VISUALIZATION                 #
 ############################################################
 
-field = data.field.find(freq=f0)
-field.set_excitations(0,1,0)
-display = model.display
-display.populate()
-display.animate().add_field(field.grid(N=200_000).scalar('Ez','complex'), symmetrize=True, clim_crop_factor=0.25)
-display.show()
+# Different excitations
+signals = [(1.0, 0.0, 1.0, 0.0), (1.0, 0.0, -1.0, 0.0)]
+names = ['Sum', 'Delta']
+
+for amplitudes, name in zip(signals, names):
+    field = data.field.find(freq=f0)
+    field.set_excitations(*amplitudes)
+    display = model.display
+    display.populate()
+    display.add_title(name)
+    display.animate().add_field(field.grid(N=200_000).scalar('Ez','complex'), symmetrize=True, clim_crop_factor=0.25)
+    display.show()

@@ -1,5 +1,5 @@
 # =============================================================================
-# EMerge Simulation Template: Wilkinson Power Divider
+# EMerge Simulation Template: Ratrace Coupler
 #
 # Copyright (C) 2026 Robert Fennis
 #
@@ -19,10 +19,15 @@
 # =============================================================================
 
 # -----------------------------------------------------------------------------
-# Optimized branchline coupler at 3.0 GHz
-# We use the offset options (dx, dy) of the .straight() command to realize asymmetric tapers
-# We also use the symmetric .taper() function to minimize the junction capacitance.
-#
+# This design is the most basic Ratrace coupler possible. The Ratrace
+# coupler consists of a 6 x ¼λ circupherence path with 4 ports.
+# The ports are counted 1 (all to the right) and then counting up
+# to 4 going counter-clockwise with port 4 pointing to the left.
+# This turns the ports into:
+#  Port 1: In/out 1
+#  Port 2: Out/in Sum (Σ)
+#  Port 3: In/out 2
+#  Port 4: Out/in Delta (Δ)
 # -----------------------------------------------------------------------------
 from emerge_config import config
 config.set_acc_threads(4)
@@ -175,13 +180,20 @@ ratio_2 = np.abs(S21)**2/total
 ratio_4 = np.abs(S41)**2/total
 
 plot(f/GHz, [ratio_2, ratio_4], labels=['P2/Ptot','P4/Ptot'], xlabel='Frequency (GHz)',ylabel='Power Ratio', ylim=[0,1])
+
 ############################################################
 #                     3D FIELD VISUALIZATION                 #
 ############################################################
 
-field = data.field.find(freq=f0)
-field.set_excitations(0,1,0)
-display = model.display
-display.populate()
-display.animate().add_field(field.grid(N=200_000).scalar('Ez','complex'), symmetrize=True, clim_crop_factor=0.25)
-display.show()
+# Different excitations
+signals = [(1.0, 0.0, 1.0, 0.0), (1.0, 0.0, -1.0, 0.0)]
+names = ['Sum', 'Delta']
+
+for amplitudes, name in zip(signals, names):
+    field = data.field.find(freq=f0)
+    field.set_excitations(*amplitudes)
+    display = model.display
+    display.populate()
+    display.add_title(name)
+    display.animate().add_field(field.grid(N=200_000).scalar('Ez','complex'), symmetrize=True, clim_crop_factor=0.25)
+    display.show()

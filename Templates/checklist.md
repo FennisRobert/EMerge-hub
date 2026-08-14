@@ -54,8 +54,8 @@ This checklist tracks community-contributed simulation templates for **EMerge**.
 | `PCB-DIV-01` | **2-Way Wilkinson Power Divider** | Microstrip + Resistor | Equi-phase power split with internal resistor. | - [x] | - [x] | Robert Fennis |
 | `PCB-DIV-02` | **Gysel Power Divider** | Microstrip | High-power alternative to Wilkinson. | - [ ] | - [ ] |  |
 | `PCB-DIV-03` | **Branchline Coupler (90° Hybrid)** | Microstrip | Quadrature phase generation for mixers. | - [x] | - [x] | Robert Fennis |
-| `PCB-DIV-04` | **Rat-Race Coupler (180° Hybrid)** | Microstrip | Sum and difference monopulse networks. | - [ ] | - [ ] | Robert Fennis |
-| `PCB-DIV-05` | **Edge-Coupled Directional Coupler** | Microstrip | Power monitoring and SWR detection. | - [ ] | - [ ] |  |
+| `PCB-DIV-04` | **Rat-Race Coupler (180° Hybrid)** | Microstrip | Sum and difference monopulse networks. | - [x] | - [x] | Robert Fennis |
+| `PCB-DIV-05` | **Edge-Coupled Directional Coupler** | Microstrip | Power monitoring and SWR detection. | - [ ] | - [ ] | Robert Fennis |
 | `PCB-DIV-06` | **Lange Coupler** | Microstrip + Wirebonds | Multi-octave bandwidth; tests wire bridges. | - [x] | - [x] | Robert Fennis |
 
 ### 1.4 PCB Interconnects, Routing & Transitions

@@ -1,5 +1,5 @@
 # =============================================================================
-# EMerge Simulation Template: Wilkinson Power Divider
+# EMerge Simulation Template: Branchline Coupler
 #
 # Copyright (C) 2026 Robert Fennis
 #
