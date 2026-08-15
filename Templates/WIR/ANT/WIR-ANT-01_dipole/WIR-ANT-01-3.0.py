@@ -168,7 +168,7 @@ model.display.add_object(airbox)
 #
 # # Compute full 3D far-field (at the same frequency) and display
 ff3d = data.field.find(freq=1.0e9).farfield_3d(boundary_selection)
-model.display.add_farfield3d(ff3d, dB='True', rmax=300*mm / 2, offset=(0, 0, 150*mm))
+model.display.add_farfield3d(ff3d, dB='True', rmax=150*mm / 2, offset=(0, 0, 0))
 #
 # # Show interactive 3D scene
 model.display.show()
