@@ -109,7 +109,7 @@ This checklist tracks community-contributed simulation templates for **EMerge**.
 | `WIR-ANT-01` | **Half-Wave Center-Fed Dipole** | Discrete Gap Port | "Hello World" baseline EM antenna. | - [X] | - [x] | Michael Burbidge |
 | `WIR-ANT-02` | **Folded Dipole Antenna** | Discrete Gap Port | $300\ \Omega$ feed antenna for broadcast TV. | - [X] | - [ ] | Robert Fennis |
 | `WIR-ANT-03` | **Wire Monopole on Finite Ground** | Coax Base Feed | Ground plane edge diffraction benchmark. | - [x] | - [x] | Robert Fennis |
-| `WIR-ANT-04` | **3-Element Yagi-Uda Antenna** | Discrete Gap Port | Parasitic director and reflector dynamics. | - [ ] | - [ ] |  |
+| `WIR-ANT-04` | **5-Element Yagi-Uda Antenna** | Discrete Gap Port | Parasitic director and reflector dynamics. | - [x] | - [x] | Robert Fennis |
 | `WIR-ANT-05` | **Electrically Small Wire Loop** | Discrete Gap Port | Near-field magnetic sensing / NFC baseline. | - [ ] | - [ ] |  |
 | `WIR-ANT-06` | **Resonant Full-Wave Loop** | Discrete Gap Port | Directional wire antenna for radio receivers. | - [ ] | - [ ] |  |
 | `WIR-ANT-07` | **Axial-Mode Helical Antenna** | Coax + Ground Plane | 3D curve meshing & circular polarization. | - [ ] | - [ ] |  |
