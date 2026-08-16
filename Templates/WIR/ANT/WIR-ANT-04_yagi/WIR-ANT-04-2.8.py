@@ -1,5 +1,5 @@
 # =============================================================================
-# EMerge Simulation Template: [WIR-ANT-01]
+# EMerge Simulation Template: [WIR-ANT-04]
 #
 # Copyright (C) [2026] [mikeb127]
 #
@@ -18,12 +18,12 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 #
 # -----------------------------------------------------------------------------
-#   Half-Wave Center-Fed Dipole
+#   3-Element Yagi-Uda Antenna
 #
-# The 'Hello World' of antenna simulations. Simulates a basic Half-
-# Wave Center-Fed Dipole operating at 1Ghz and outputs the antenna gain charts
-# as well as an E-field 3d visualization
-# Uses up to 6GB
+# This is a model of a three element Yagi optimized at 868 MHz for use with
+# Mesh radio etc. Outputs impedance, S value, antenna gain charts
+# as well as an E-field 3d visualization. It uses a PFTE boom (3dp or similar)
+# Uses up to 8GB
 # -----------------------------------------------------------------------------
 
 import emerge as em
@@ -58,50 +58,94 @@ MU0 = 1/(C0*C0*EPS0)
 # to tweak.
 
 # --- Frequency ------------------------------------------------------------
-f0 = 1e9       # center / operating frequency (Hz)
+f0 = 868*MHz      # center / operating frequency (Hz)
 
 # --- Geometry dimensions ---------------------------------------------------
-airbox_hght = 200 * mm
-airbox_wdth = 150 * mm
-airbox_dpt = 150 * mm
+airbox_hght = 150 * mm
+airbox_wdth = 250 * mm
+airbox_dpt = 350 * mm
 
-antenna_height = 143*mm
-antenna_radius = 1*mm
+wavelength = C0/f0
 
-cut_port_height = 1*mm
-cut_port_radius = 1*mm
+# Everything in the simulation can be adjusted by tuning the parameters below
+# except for the width of the driven port. This is hardcoded further down as there
+# isn't really a need for this to change
 
-port_width = 2 * mm
-port_height = 1 * mm
+driven_length = 0.46 * wavelength
+reflector_length = .5 * wavelength
+parasite_length = .43 * wavelength
+element_spacing = 0.17 * wavelength
+element_radius = 1 * mm
+
+boom_length = (2 * element_spacing) + 20*mm
+boom_width = 10 * mm
+boom_height = 10 * mm
 
 ############################################################
 #                      SIMULATION SETUP                    #
 ############################################################
 
 
-model = em.Simulation('HalfWaveDipole')
-model.check_version("3.0.0")  # Checks version compatibility.
+model = em.Simulation('YagiAntenna')
+model.check_version("2.8.3")  # Checks version compatibility.
+model.settings.size_check = False
 
 ############################################################
 #                          GEOMETRY                        #
 ############################################################
 
 airbox = em.geo.Box(airbox_wdth, airbox_dpt, airbox_hght,  alignment=em.CENTER)
-half_wave_dipole = em.geo.Cylinder(antenna_radius,antenna_height, cs=em.cs(origin=(0,0,-antenna_height/2)))
-port_cut = em.geo.Cylinder(cut_port_radius,cut_port_height, cs=em.cs(origin=(0,0,-cut_port_height/2)))
-half_wave_dipole = em.geo.subtract(half_wave_dipole, port_cut)
+boom = em.geo.Box(boom_width, boom_length, boom_height,  alignment=em.CENTER)
 
-port = em.geo.Plate((-1*mm, 0*mm, -0.5*mm),(2*mm,0,0),(0,0,1*mm))
+# Create the driven element slot
+driver_slot = em.geo.Cylinder(element_radius,boom_width, cs=em.cs(origin=(boom_width/2,0,boom_width/2)))
+driver_slot = em.geo.rotate(driver_slot,[boom_width/2,0,boom_width/2],[0,1,0],angle=90)
+boom = em.geo.remove(boom,driver_slot)
 
-half_wave_dipole.set_material(em.lib.PEC)
+# Add the driven element
+driven_element = em.geo.Cylinder(element_radius,driven_length, cs=em.cs(origin=(driven_length/2,0,boom_width/2)))
+driven_element = em.geo.rotate(driven_element,[driven_length/2,0,boom_width/2],[0,1,0],angle=90)
 
-model.view(use_gmsh=True)
+# Remove the piece from the driven element for the port
+cut_piece = em.geo.Cylinder(element_radius, 1*mm, cs=em.cs(origin=(.5*mm,0,boom_width/2)))
+cut_piece = em.geo.rotate(cut_piece, [.5*mm,0,boom_width/2], [0,1,0],angle=90)
+driven_element = em.geo.remove(driven_element,cut_piece)
+
+# Add the surface for our excitation port
+sheet = em.geo.XYPlate(1*mm, 2 * element_radius,
+                       (-.5*mm,-1 * element_radius,boom_width/2))
+
+# Cut the slot for the reflector
+reflector_slot = em.geo.Cylinder(element_radius,boom_width, cs=em.cs(origin=(boom_width/2,element_spacing,boom_width/2)))
+reflector_slot = em.geo.rotate(reflector_slot,[boom_width/2,element_spacing,boom_width/2],[0,1,0],angle=90)
+boom = em.geo.remove(boom, reflector_slot)
+
+# Add the driven element
+reflector_element = em.geo.Cylinder(element_radius,reflector_length, cs=em.cs(origin=(reflector_length/2,
+                                                                                      element_spacing,boom_width/2)))
+reflector_element = em.geo.rotate(reflector_element,[reflector_length/2,element_spacing,boom_width/2],[0,1,0],angle=90)
+
+# Cut the slot for the director
+director_slot = em.geo.Cylinder(element_radius,boom_width, cs=em.cs(origin=(boom_width/2,-element_spacing,boom_width/2)))
+director_slot = em.geo.rotate(director_slot,[boom_width/2,-element_spacing,boom_width/2],[0,1,0],angle=90)
+boom = em.geo.remove(boom, director_slot)
+
+# Add the director element
+director_element = em.geo.Cylinder(element_radius,parasite_length, cs=em.cs(origin=(parasite_length/2,-element_spacing,boom_width/2)))
+director_element = em.geo.rotate(director_element,[parasite_length/2,-element_spacing,boom_width/2],[0,1,0],angle=90)
+
+driven_element.set_material(em.lib.COPPER)
+reflector_element.set_material(em.lib.COPPER)
+director_element.set_material(em.lib.COPPER)
+boom.set_material(em.lib.DIEL_PTFE)
+
 ############################################################
 #                      COMMIT GEOMETRY                     #
 ############################################################
 
 # Once the geometry is finalized, hand it over to the solver.
 model.commit_geometry()
+#model.view()
 
 ############################################################
 #                    SOLVER / MESH SETTINGS                 #
@@ -127,7 +171,9 @@ model.view(plot_mesh=True)
 
 boundary_selection = airbox.boundary()
 abc = model.mw.bc.AbsorbingBoundary(boundary_selection)
-port_bc = model.mw.bc.LumpedPort(port, 1, width=port_width, height=port_height, direction=(0,0,1), Z0=50.0)
+port_bc = model.mw.bc.LumpedPort(sheet, 1, width=1*mm,
+                                 height=2*element_radius,
+                                 direction=(1,0,0), Z0=50.0)
 
 ############################################################
 #                       RUN SIMULATION                      #
@@ -151,9 +197,9 @@ print(f'Load impedance = {Zload:.1f} Ω')
 #              POST-PROCESSING: FAR-FIELD (ANTENNAS)         #
 ############################################################
 
-ff = data.field.find(freq=f0).farfield_2d((1, 0, 0), (0, 1, 0), boundary_selection)
+ff = data.field.find(freq=f0).farfield_2d((0, 1, 0), (0, 0, 1), boundary_selection)
 plot_ff(ff.ang * 180 / np.pi, ff.gain.norm, dB=True, ylabel="Gain [dBi]")
-plot_ff_polar(ff.ang, ff.gain.norm, dB=True, dBfloor=-40)
+plot_ff_polar(ff.ang, ff.gain.norm, dB=True, dBfloor=-15)
 
 ############################################################
 #                     3D FIELD VISUALIZATION                 #
@@ -163,12 +209,15 @@ plot_ff_polar(ff.ang, ff.gain.norm, dB=True, dBfloor=-40)
 ### antenna gain
 
 # # Add geometry for context
-model.display.add_object(half_wave_dipole)
+model.display.add_object(boom)
 model.display.add_object(airbox)
+model.display.add_object(driven_element)
+model.display.add_object(director_element)
+model.display.add_object(driven_element)
 #
 # # Compute full 3D far-field (at the same frequency) and display
-ff3d = data.field.find(freq=1.0e9).farfield_3d(boundary_selection)
-model.display.add_farfield3d(ff3d, dB='True', rmax=150*mm / 2, offset=(0, 0, 0))
+ff3d = data.field.find(freq=f0).farfield_3d(boundary_selection)
+model.display.add_farfield3d(ff3d, dB='True', rmax=110*mm, offset=(0,0,0))
 #
 # # Show interactive 3D scene
 model.display.show()
