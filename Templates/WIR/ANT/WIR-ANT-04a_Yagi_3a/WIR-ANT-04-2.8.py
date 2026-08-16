@@ -163,7 +163,7 @@ model.mw.set_resolution(0.2)
 ############################################################
 
 model.generate_mesh()
-
+model.view()
 model.view(plot_mesh=True)
 ############################################################
 #                    BOUNDARY CONDITIONS                    #
