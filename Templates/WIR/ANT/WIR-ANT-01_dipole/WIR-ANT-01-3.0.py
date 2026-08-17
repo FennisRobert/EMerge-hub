@@ -120,7 +120,7 @@ model.mw.set_resolution(0.2)
 
 model.generate_mesh()
 
-model.view(plot_mesh=True)
+model.view()
 ############################################################
 #                    BOUNDARY CONDITIONS                    #
 ############################################################

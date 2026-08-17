@@ -122,7 +122,6 @@ le = pcb.lumped_elements
 diel = pcb.generate_pcb()
 air = pcb.generate_air(5*mm)
 
-model.view(use_gmsh=True)
 ############################################################
 #                      COMMIT GEOMETRY                     #
 ############################################################

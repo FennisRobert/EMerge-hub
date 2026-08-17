@@ -112,7 +112,7 @@ model.mesher.set_curved_boundary_meshing(20)
 ############################################################
 
 model.generate_mesh()
-model.view(plot_mesh=True)
+model.view()
 
 ############################################################
 #                    BOUNDARY CONDITIONS                    #
