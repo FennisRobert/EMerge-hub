@@ -1,8 +1,8 @@
 # EMerge Template Gallery
 
-_Auto-generated on 2026-08-17 13:50 by `generate_template_gallery.py` — do not edit by hand, re-run the script instead._
+_Auto-generated on 2026-08-17 13:54 by `generate_template_gallery.py` — do not edit by hand, re-run the script instead._
 
-**20** templates with a preview image, **23** implemented in total, out of **64** catalogued in `Templates/checklist.md`.
+**21** templates with a preview image, **24** implemented in total, out of **64** catalogued in `Templates/checklist.md`.
 
 ## Contents
 
@@ -286,6 +286,19 @@ _Nothing implemented yet in this category — see below._
 </sub>
 </td>
 </tr>
+<tr>
+<td align="center" width="33%">
+<a href="Templates/WIR/ANT/WIR-ANT-06_Loop"><img src="Templates/WIR/ANT/WIR-ANT-06_Loop/geo.png" width="230"/></a><br/>
+<b>WIR-ANT-06 · Resonant Full-Wave Loop</b><br/>
+<sub>Directional wire antenna for radio receivers.</sub><br/>
+<sub>Feed: Discrete Gap Port</sub><br/>
+<sub>✅ 2.8 &nbsp;·&nbsp; ✅ 3.0
+ &nbsp;·&nbsp; Michael Burbidge
+</sub>
+</td>
+<td width="33%"></td>
+<td width="33%"></td>
+</tr>
 </table>
 
 ### 3.2 3D Wideband & EMC Antennas
@@ -336,7 +349,6 @@ Planned templates from `checklist.md` with no matching folder under `Templates/`
 | `WIR-ANT-04a` | 3-Element Yagi-Uda Antenna | Discrete Gap Port | Parasitic director and reflector dynamics. |
 | `WIR-ANT-04b` | 5-Element Yagi-Uda Antenna | Discrete Gap Port | Parasitic director and reflector dynamics. |
 | `WIR-ANT-05` | Electrically Small Wire Loop | Discrete Gap Port | Near-field magnetic sensing / NFC baseline. |
-| `WIR-ANT-06` | Resonant Full-Wave Loop | Discrete Gap Port | Directional wire antenna for radio receivers. |
 | `WIR-ANT-07` | Axial-Mode Helical Antenna | Coax + Ground Plane | 3D curve meshing & circular polarization. |
 | `WIR-ANT-08` | Normal-Mode (Rubber Ducky) Helix | Coax Base Feed | Compact helical monopole for walkie-talkies. |
 | `WIR-UWB-01` | 3D Discone Antenna | Coax Feed | Wideband omnidirectional receiving antenna. |
