@@ -80,8 +80,8 @@ resonant_loop_diameter = 55 * mm #Must match radius of torus in step file
 
 
 model = em.Simulation('ResonantFullWaveLoop')
-model.check_version("2.8.3")  # Checks version compatibility.
-
+model.check_version("3.0.0")  # Checks version compatibility.
+model.settings.size_check = False
 
 ############################################################
 #                          GEOMETRY                        #
@@ -111,7 +111,6 @@ loop.set_material(em.lib.COPPER)
 
 # Once the geometry is finalized, hand it over to the solver.
 model.commit_geometry()
-#model.view()
 
 ############################################################
 #                    SOLVER / MESH SETTINGS                 #

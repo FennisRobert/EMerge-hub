@@ -112,7 +112,7 @@ This checklist tracks community-contributed simulation templates for **EMerge**.
 | `WIR-ANT-04a` | **3-Element Yagi-Uda Antenna** | Discrete Gap Port | Parasitic director and reflector dynamics. | - [x] | - [x] | Michael Burbidge |
 | `WIR-ANT-04b` | **5-Element Yagi-Uda Antenna** | Discrete Gap Port | Parasitic director and reflector dynamics. | - [x] | - [x] | Robert Fennis |
 | `WIR-ANT-05` | **Electrically Small Wire Loop** | Discrete Gap Port | Near-field magnetic sensing / NFC baseline. | - [ ] | - [ ] |  |
-| `WIR-ANT-06` | **Resonant Full-Wave Loop** | Discrete Gap Port | Directional wire antenna for radio receivers. | - [X] | - [ ] | Michael Burbidge  |
+| `WIR-ANT-06` | **Resonant Full-Wave Loop** | Discrete Gap Port | Directional wire antenna for radio receivers. | - [X] | - [x] | Michael Burbidge  |
 | `WIR-ANT-07` | **Axial-Mode Helical Antenna** | Coax + Ground Plane | 3D curve meshing & circular polarization. | - [ ] | - [ ] |  |
 | `WIR-ANT-08` | **Normal-Mode (Rubber Ducky) Helix** | Coax Base Feed | Compact helical monopole for walkie-talkies. | - [ ] | - [ ] |  |
 
