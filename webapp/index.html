@@ -21,11 +21,16 @@
     <div id="search-wrap">
       <input id="search" type="search" placeholder="Search templates…" autocomplete="off">
     </div>
+    <a id="guide-link" href="guide.html">Install Guide</a>
+    <a id="download-repo" href="https://github.com/FennisRobert/EMerge-hub/archive/refs/heads/main.zip" target="_blank" rel="noopener">⭳ Download repo</a>
     <div id="stats"></div>
   </header>
 
   <div id="body">
     <nav id="sidebar">
+      <div id="tree-controls">
+        <button id="toggle-all-btn" type="button">Collapse all</button>
+      </div>
       <div id="tree"></div>
     </nav>
 
@@ -58,7 +63,10 @@
         <div class="tpl-header">
           <div class="tpl-titles">
             <h1 id="tpl-name"></h1>
-            <code id="tpl-id"></code>
+            <div class="tpl-id-row">
+              <code id="tpl-id"></code>
+              <button id="copy-link-btn" type="button" title="Copy link to this template">🔗 Copy link</button>
+            </div>
           </div>
           <div class="tpl-badges" id="tpl-badges"></div>
         </div>
@@ -74,7 +82,10 @@
         <div class="code-panel">
           <div class="code-tabs" id="code-tabs"></div>
           <div class="code-toolbar">
-            <span id="code-filename"></span>
+            <div class="code-toolbar-left">
+              <span id="code-filename"></span>
+              <a id="code-github-link" href="#" target="_blank" rel="noopener">View on GitHub ↗</a>
+            </div>
             <button id="copy-btn" type="button">
               <span id="copy-icon">⧉</span>
               <span id="copy-label">Copy</span>

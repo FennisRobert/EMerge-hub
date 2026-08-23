@@ -211,9 +211,11 @@
     const file = activeFiles[activeFileIndex];
     const codeBlock = el('code-block');
     const filenameEl = el('code-filename');
+    const ghLink = el('code-github-link');
     if (!file) {
       codeBlock.textContent = '# No source file available for this template yet.';
       filenameEl.textContent = '';
+      ghLink.style.display = 'none';
       return;
     }
     filenameEl.textContent = file.filename;
@@ -221,6 +223,13 @@
     codeBlock.removeAttribute('data-highlighted');
     if (window.hljs) {
       window.hljs.highlightElement(codeBlock);
+    }
+
+    if (data.repo && file.path) {
+      ghLink.href = `https://github.com/${data.repo.owner}/${data.repo.name}/blob/${data.repo.branch}/${file.path}`;
+      ghLink.style.display = '';
+    } else {
+      ghLink.style.display = 'none';
     }
   }
 
@@ -247,6 +256,62 @@
       btn.classList.remove('copied');
       label.textContent = prevLabel;
     }, 1400);
+  });
+
+  // ---- Copy link to current template ----
+  el('copy-link-btn').addEventListener('click', async (e) => {
+    const btn = e.currentTarget;
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+    } catch (err) {
+      const ta = document.createElement('textarea');
+      ta.value = window.location.href;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+    const prevText = btn.textContent;
+    btn.classList.add('copied');
+    btn.textContent = '✓ Link copied';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.textContent = prevText;
+    }, 1400);
+  });
+
+  // ---- Expand all / collapse all ----
+  const toggleAllBtn = el('toggle-all-btn');
+  toggleAllBtn.addEventListener('click', () => {
+    const anyExpanded = groups.some((g) => !g.subBodyEl.classList.contains('collapsed'));
+    groups.forEach((g) => {
+      g.subHeaderEl.classList.toggle('collapsed', anyExpanded);
+      g.subBodyEl.classList.toggle('collapsed', anyExpanded);
+    });
+    toggleAllBtn.textContent = anyExpanded ? 'Expand all' : 'Collapse all';
+  });
+
+  // ---- Keyboard shortcuts ----
+  document.addEventListener('keydown', (e) => {
+    const tag = document.activeElement && document.activeElement.tagName;
+    const isTyping = tag === 'INPUT' || tag === 'TEXTAREA';
+
+    if (e.key === '/' && !isTyping) {
+      e.preventDefault();
+      search.focus();
+      return;
+    }
+    if (e.key === 'Escape') {
+      if (!lightbox.hidden) {
+        lightbox.hidden = true;
+        return;
+      }
+      if (document.activeElement === search && search.value) {
+        search.value = '';
+        search.dispatchEvent(new Event('input'));
+        search.blur();
+      }
+    }
   });
 
   // ---- Lightbox ----

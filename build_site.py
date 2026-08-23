@@ -43,6 +43,11 @@ IMAGE_NAME = "geo.png"
 # competing for a top-10 spot.
 LEAD_DEVELOPER = "Robert Fennis"
 
+# Used to build "View on GitHub" / "Download repository" links.
+REPO_OWNER = "FennisRobert"
+REPO_NAME = "EMerge-hub"
+REPO_BRANCH = "main"
+
 
 # --------------------------------------------------------------------------- #
 # Data model
@@ -306,6 +311,7 @@ def build_data(sections: list, models: dict) -> dict:
                     files.append({
                         "label": label_for_py(p),
                         "filename": p.name,
+                        "path": p.as_posix(),
                         "code": code,
                     })
 
@@ -332,6 +338,11 @@ def build_data(sections: list, models: dict) -> dict:
 
     return {
         "generated": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "repo": {
+            "owner": REPO_OWNER,
+            "name": REPO_NAME,
+            "branch": REPO_BRANCH,
+        },
         "stats": {
             "implemented": implemented,
             "total": total_rows,

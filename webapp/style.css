@@ -96,6 +96,19 @@ html, body {
   white-space: nowrap;
 }
 
+#guide-link, #download-repo {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-decoration: none;
+  white-space: nowrap;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+  border-radius: 999px;
+}
+#guide-link:hover, #download-repo:hover { color: var(--accent); border-color: var(--accent); }
+
 /* ---------- Body layout ---------- */
 #body {
   flex: 1 1 auto;
@@ -121,6 +134,22 @@ html, body {
 }
 
 /* ---------- Tree ---------- */
+#tree-controls {
+  padding: 4px 18px 10px;
+  border-bottom: 1px solid var(--border-soft);
+  margin-bottom: 4px;
+}
+#toggle-all-btn {
+  background: none;
+  border: none;
+  color: var(--text-faint);
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+#toggle-all-btn:hover { color: var(--accent); }
+
 .section-title {
   font-size: 11px;
   text-transform: uppercase;
@@ -338,6 +367,20 @@ html, body {
   padding: 2px 8px;
   border-radius: 6px;
 }
+.tpl-id-row { display: flex; align-items: center; gap: 10px; }
+#copy-link-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  color: var(--text-faint);
+  font-size: 11.5px;
+  cursor: pointer;
+  padding: 0;
+}
+#copy-link-btn:hover { color: var(--accent); }
+#copy-link-btn.copied { color: var(--badge-yes); }
 
 .tpl-badges { display: flex; gap: 8px; flex-wrap: wrap; }
 .badge {
@@ -425,6 +468,14 @@ html, body {
   font-size: 12px;
   color: var(--text-faint);
 }
+.code-toolbar-left { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.code-toolbar-left #code-filename { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#code-github-link {
+  color: var(--text-faint);
+  text-decoration: none;
+  white-space: nowrap;
+}
+#code-github-link:hover { color: var(--accent); }
 
 #copy-btn {
   display: flex;
@@ -503,7 +554,124 @@ html, body {
   }
   #body.sidebar-open #sidebar-scrim { display: block; }
 
-  #stats { display: none; }
+  #stats, #guide-link, #download-repo { display: none; }
   #template-view { padding: 22px 16px 60px; }
   .tpl-titles h1 { font-size: 21px; }
+  .guide-content { padding: 22px 16px 60px; }
 }
+
+/* ---------- Install Guide page ---------- */
+#back-to-explorer {
+  font-size: 13px;
+  color: var(--text-dim);
+  text-decoration: none;
+  white-space: nowrap;
+}
+#back-to-explorer:hover { color: var(--accent); }
+
+.guide-content {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 40px 32px 100px;
+}
+
+#guide h1 { font-size: 26px; margin: 0 0 14px; }
+.guide-intro {
+  color: var(--text-dim);
+  font-size: 14.5px;
+  line-height: 1.65;
+  margin: 0 0 28px;
+}
+
+.guide-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 40px;
+}
+.guide-nav a {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-decoration: none;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 7px 14px;
+  border-radius: 999px;
+}
+.guide-nav a:hover { color: var(--accent); border-color: var(--accent); }
+
+.guide-os {
+  border-top: 1px solid var(--border);
+  padding-top: 32px;
+  margin-top: 32px;
+  scroll-margin-top: 20px;
+}
+.guide-os:first-of-type { border-top: none; margin-top: 0; }
+
+.guide-os h2 { font-size: 20px; margin: 0 0 18px; }
+.guide-os h3 { font-size: 14.5px; color: var(--accent-strong); margin: 22px 0 10px; }
+.guide-os p { color: var(--text-dim); font-size: 14px; line-height: 1.65; margin: 0 0 12px; }
+.guide-os ol {
+  color: var(--text-dim);
+  font-size: 14px;
+  line-height: 1.75;
+  padding-left: 20px;
+  margin: 0 0 14px;
+}
+.guide-os li { margin-bottom: 6px; }
+.guide-os code {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--accent);
+  background: var(--accent-soft);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+.guide-link {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--accent);
+}
+
+.guide-note {
+  font-size: 13px;
+  color: var(--text-faint);
+  border-left: 2px solid var(--border);
+  padding-left: 12px;
+}
+
+.code-box {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin: 0 0 16px;
+}
+.code-box pre {
+  margin: 0;
+  padding: 14px 90px 14px 16px;
+  overflow-x: auto;
+}
+.code-box code {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--text);
+  background: none;
+  padding: 0;
+  white-space: pre;
+}
+.code-box .cbtn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  padding: 5px 11px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.code-box .cbtn:hover { border-color: var(--accent); color: var(--accent); }
+.code-box .cbtn.copied { border-color: var(--badge-yes); color: var(--badge-yes); }

@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EMerge Installation Guide</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" type="image/png" href="EMS_small.png">
+</head>
+<body>
+
+<div id="app">
+
+  <header id="topbar">
+    <a id="brand" href="index.html">
+      <img id="brand-mark" src="EMS_small.png" alt="EMerge logo">
+      <span id="brand-name">EMerge Template Explorer</span>
+    </a>
+    <div id="search-wrap"></div>
+    <a id="back-to-explorer" href="index.html">← Back to templates</a>
+  </header>
+
+  <div id="body">
+    <main id="content" class="guide-content">
+      <article id="guide">
+
+        <h1>Installing Python and EMerge</h1>
+        <p class="guide-intro">
+          Everything in this library is a plain Python script. To run one, you need Python
+          itself and the <code>emerge</code> package installed on your own computer, there is
+          no way to run a simulation from inside this website. This guide walks through both
+          steps for Windows, macOS, and Linux.
+        </p>
+
+        <nav class="guide-nav">
+          <a href="#windows">Windows</a>
+          <a href="#macos">macOS</a>
+          <a href="#linux">Linux</a>
+          <a href="#verify">Verify it worked</a>
+        </nav>
+
+        <!-- ============================= WINDOWS ============================= -->
+        <section class="guide-os" id="windows">
+          <h2>Windows</h2>
+
+          <h3>1. Install Python</h3>
+          <ol>
+            <li>Go to <span class="guide-link">python.org/downloads</span> and download the latest Python 3 installer.</li>
+            <li>Run the installer. On the very first screen, tick <b>"Add python.exe to PATH"</b> before clicking Install. This step is easy to miss and is the most common reason <code>python</code> or <code>pip</code> is not recognized afterward.</li>
+            <li>Open a terminal: press the Windows key, type <b>cmd</b> (Command Prompt) or <b>PowerShell</b>, and press Enter.</li>
+            <li>Check that it worked:</li>
+          </ol>
+          <div class="code-box"><pre><code>python --version
+pip --version</code></pre><button class="cbtn" type="button">Copy</button></div>
+          <p class="guide-note">Both commands should print a version number. If they say "not recognized," reinstall Python and make sure to tick the PATH checkbox.</p>
+
+          <h3>2. Install EMerge</h3>
+          <p>The current stable release is version 2.8:</p>
+          <div class="code-box"><pre><code>pip install emerge</code></pre><button class="cbtn" type="button">Copy</button></div>
+          <p>Version 3.0 is in alpha. Several templates in this library target it; install it with the <code>--pre</code> flag instead:</p>
+          <div class="code-box"><pre><code>pip install --pre emerge</code></pre><button class="cbtn" type="button">Copy</button></div>
+        </section>
+
+        <!-- ============================= MACOS ============================= -->
+        <section class="guide-os" id="macos">
+          <h2>macOS</h2>
+
+          <h3>1. Install Python</h3>
+          <ol>
+            <li>Go to <span class="guide-link">python.org/downloads</span> and download the macOS installer (a <code>.pkg</code> file), then run it. (If you already use Homebrew, <code>brew install python</code> works too.)</li>
+            <li>Open the Terminal app: press Cmd+Space, type <b>Terminal</b>, and press Enter.</li>
+            <li>Check that it worked. On macOS the commands are usually <code>python3</code> and <code>pip3</code>, not <code>python</code>/<code>pip</code>:</li>
+          </ol>
+          <div class="code-box"><pre><code>python3 --version
+pip3 --version</code></pre><button class="cbtn" type="button">Copy</button></div>
+
+          <h3>2. Install EMerge</h3>
+          <p>Stable release (2.8):</p>
+          <div class="code-box"><pre><code>pip install emerge</code></pre><button class="cbtn" type="button">Copy</button></div>
+          <p>3.0 alpha instead:</p>
+          <div class="code-box"><pre><code>pip install --pre emerge</code></pre><button class="cbtn" type="button">Copy</button></div>
+
+          <h3>3. macOS only: install the Accelerate solver interface</h3>
+          <p>
+            On macOS, also install this package regardless of which EMerge version you chose
+            above. It lets EMerge use Apple's Accelerate framework for faster sparse solves:
+          </p>
+          <div class="code-box"><pre><code>pip install git+https://github.com/FennisRobert/emerge-aasds</code></pre><button class="cbtn" type="button">Copy</button></div>
+          <p class="guide-note">This step needs <code>git</code> installed. If the command fails saying <code>git</code> is not found, install it first by running <code>git --version</code> in Terminal, which on a fresh Mac will prompt you to install Apple's Command Line Tools, then run the command above again.</p>
+        </section>
+
+        <!-- ============================= LINUX ============================= -->
+        <section class="guide-os" id="linux">
+          <h2>Linux</h2>
+
+          <h3>1. Install Python</h3>
+          <p>Most distributions already have Python 3. Check first:</p>
+          <div class="code-box"><pre><code>python3 --version</code></pre><button class="cbtn" type="button">Copy</button></div>
+          <p>If that fails, install it and pip through your package manager:</p>
+          <div class="code-box"><pre><code># Debian / Ubuntu
+sudo apt install python3 python3-pip
+
+# Fedora
+sudo dnf install python3 python3-pip
+
+# Arch
+sudo pacman -S python python-pip</code></pre><button class="cbtn" type="button">Copy</button></div>
+          <p>Open a terminal from your application menu, or with the Ctrl+Alt+T shortcut on many distributions.</p>
+
+          <h3>2. Install EMerge</h3>
+          <p>Stable release (2.8):</p>
+          <div class="code-box"><pre><code>pip install emerge</code></pre><button class="cbtn" type="button">Copy</button></div>
+          <p>3.0 alpha instead:</p>
+          <div class="code-box"><pre><code>pip install --pre emerge</code></pre><button class="cbtn" type="button">Copy</button></div>
+          <p class="guide-note">If <code>pip</code> is not recognized, use <code>pip3</code> instead.</p>
+        </section>
+
+        <!-- ============================= VERIFY ============================= -->
+        <section class="guide-os" id="verify">
+          <h2>Verify it worked</h2>
+          <p>Run this in your terminal. It should finish with no output and no error:</p>
+          <div class="code-box"><pre><code>python -c "import emerge"</code></pre><button class="cbtn" type="button">Copy</button></div>
+          <p class="guide-note">Use <code>python3</code> instead of <code>python</code> if that's what worked for you above.</p>
+          <p>
+            From here, pick any template on the <a href="index.html">explorer page</a>, copy its
+            source with the copy button, paste it into a <code>.py</code> file, and run it with
+            <code>python your_file.py</code>.
+          </p>
+        </section>
+
+      </article>
+    </main>
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('.cbtn').forEach((btn) => {
+  btn.addEventListener('click', async () => {
+    const code = btn.previousElementSibling.textContent;
+    try {
+      await navigator.clipboard.writeText(code);
+    } catch (e) {
+      const ta = document.createElement('textarea');
+      ta.value = code;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+    const prev = btn.textContent;
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = prev; btn.classList.remove('copied'); }, 1400);
+  });
+});
+</script>
+</body>
+</html>
