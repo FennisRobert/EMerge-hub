@@ -205,7 +205,7 @@ html, body {
   text-align: center;
   color: var(--text-dim);
 }
-#empty-mark { font-size: 42px; opacity: 0.5; margin-bottom: 10px; }
+#empty-mark { width: 64px; height: auto; opacity: 0.7; margin-bottom: 14px; }
 #empty-state h1 { font-size: 20px; color: var(--text); margin: 0 0 6px; }
 #empty-state > p { margin: 0 0 28px; font-size: 14px; line-height: 1.6; }
 
