@@ -1,8 +1,8 @@
 # EMerge Template Gallery
 
-_Auto-generated on 2026-08-23 17:51 by `generate_template_gallery.py` — do not edit by hand, re-run the script instead._
+_Auto-generated on 2026-08-23 18:21 by `generate_template_gallery.py` — do not edit by hand, re-run the script instead._
 
-**21** templates with a preview image, **24** implemented in total, out of **64** catalogued in `Templates/checklist.md`.
+**22** templates with a preview image, **25** implemented in total, out of **65** catalogued in `Templates/checklist.md`.
 
 ## Contents
 
@@ -11,6 +11,7 @@ _Auto-generated on 2026-08-23 17:51 by `generate_template_gallery.py` — do not
   - [1.2 PCB Filters](#12-pcb-filters)
   - [1.3 PCB Dividers & Couplers](#13-pcb-dividers-couplers)
   - [1.4 PCB Interconnects, Routing & Transitions](#14-pcb-interconnects-routing-transitions)
+  - [1.5 PCB Matching circuits](#15-pcb-matching-circuits)
 - [2. Waveguide & Cavity Technology](#2-waveguide-cavity-technology)
   - [2.1 Waveguide Antennas](#21-waveguide-antennas)
   - [2.2 Waveguide Components & Plumbing](#22-waveguide-components-plumbing)
@@ -230,6 +231,24 @@ _Auto-generated on 2026-08-23 17:51 by `generate_template_gallery.py` — do not
 ### 1.4 PCB Interconnects, Routing & Transitions
 
 _Nothing implemented yet in this category — see below._
+
+### 1.5 PCB Matching circuits
+
+<table>
+<tr>
+<td align="center" width="33%">
+<a href="Templates/PCB/MTH/PCB-MTH-01_Taper"><img src="Templates/PCB/MTH/PCB-MTH-01_Taper/geo.png" width="230"/></a><br/>
+<b>PCB-MTH-01 · PCB Tapers</b><br/>
+<sub>Different tapers (exponential, linear, etc.).</sub><br/>
+<sub>Feed: Microstrip</sub><br/>
+<sub>✅ 2.8 &nbsp;·&nbsp; ✅ 3.0
+ &nbsp;·&nbsp; andresmmera
+</sub>
+</td>
+<td width="33%"></td>
+<td width="33%"></td>
+</tr>
+</table>
 
 ## 2. Waveguide & Cavity Technology
 
