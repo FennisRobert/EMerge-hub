@@ -19,15 +19,12 @@
 # =============================================================================
 
 # -----------------------------------------------------------------------------
-# This design is the most basic Ratrace coupler possible. The Ratrace
-# coupler consists of a 6 x ¼λ circupherence path with 4 ports.
-# The ports are counted 1 (all to the right) and then counting up
-# to 4 going counter-clockwise with port 4 pointing to the left.
-# This turns the ports into:
-#  Port 1: In/out 1
-#  Port 2: Out/in Sum (Σ)
-#  Port 3: In/out 2
-#  Port 4: Out/in Delta (Δ)
+# Rat-Race Coupler / 180 Degree Hybrid (3 GHz)
+#
+# A ring-shaped four-port coupler, sized so its circumference is six
+# quarter-wavelengths around. Depending on which port is driven, it produces
+# either the sum or the difference of two input signals, which is why it is
+# used in monopulse radar and mixer circuits that need both. Tuned to 3 GHz.
 # -----------------------------------------------------------------------------
 from emerge_config import config
 config.set_acc_threads(4)

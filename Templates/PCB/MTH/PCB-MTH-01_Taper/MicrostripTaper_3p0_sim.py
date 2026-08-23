@@ -19,7 +19,14 @@
 # =============================================================================
 
 # -----------------------------------------------------------------------------
-# Tapered transmission lines on a 20 mil RO4003C substrate
+# Microstrip Impedance Taper (50 to 15 Ohm)
+#
+# Compares different ways of gradually widening a transmission line to
+# transform its impedance from 50 to 15 ohm, instead of stepping it in one
+# abrupt jump. Four taper shapes are precomputed and selectable: exponential,
+# triangular, linear, and Klopfenstein (the smoothest, lowest-ripple option
+# from classic microwave filter theory). Built on a 0.508 mm RO4003C
+# substrate, centered at 1.5 GHz and swept from 100 MHz to 5 GHz.
 # -----------------------------------------------------------------------------
 from emerge_config import config
 

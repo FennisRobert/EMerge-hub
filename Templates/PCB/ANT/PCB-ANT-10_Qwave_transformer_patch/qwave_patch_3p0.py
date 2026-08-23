@@ -20,10 +20,12 @@
 # -----------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------
-# This is a simple simulation model of a 2.4GHz quarter wave transformer fed patch.
-# A thin high impedance transmission line is used as matching circuit for exciting the patch.
+# Quarter-Wave Transformer-Fed Rectangular Patch (2.4 GHz)
 #
-# The model claims approximately 4GB of RAM
+# The same patch antenna shape as PCB-ANT-09, but matched a different way:
+# instead of cutting a notch into the patch, a short, narrow section of
+# transmission line acts as an impedance transformer between the feed line
+# and the patch edge. Built on a 60 by 70 mm board and tuned to 2.4 GHz.
 # -----------------------------------------------------------------------------
 import emerge as em
 import numpy as np

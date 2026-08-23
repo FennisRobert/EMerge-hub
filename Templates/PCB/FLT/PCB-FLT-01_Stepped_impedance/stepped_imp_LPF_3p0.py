@@ -19,12 +19,20 @@
 # =============================================================================
 
 # -----------------------------------------------------------------------------
+# Stepped-Impedance Low-Pass Filter
+#
+# A low-pass filter built from six alternating sections of wide and narrow
+# microstrip trace. Wide sections behave like small inductors and narrow
+# sections like small capacitors, so the alternating pattern approximates a
+# classic LC low-pass filter using only trace geometry. Swept from 1 to
+# 5 GHz on a 1.58 mm substrate.
+#
 # Based on / Reference Design:
 # "Design and simulation of a stepped impedance low-pass filter using Altair FEKO"
 # Author: Saranraj Karuppuswami_21591
 # Source: https://community.altair.com/discussion/33328/design-and-simulation-of-a-stepped-impedance-low-pass-filter-using-altair-feko
 #
-# Note: This file is an independent implementation of the filter geometry 
+# Note: This file is an independent implementation of the filter geometry
 # and parameters described in the reference post above.
 # -----------------------------------------------------------------------------
 from emerge_config import config

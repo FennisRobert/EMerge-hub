@@ -25,16 +25,13 @@
 # and solver integrations are licensed under GNU GPL v2.
 # =============================================================================
 # -----------------------------------------------------------------------------
-# 2x1 Patch Antenna Array with a Quarter-Wave T-Junction Power Divider
+# 2x1 Patch Antenna Array with Power Divider
 #
-# This demo builds a broadside two-element microstrip patch array on a single
-# feed port. A single 50-ohm input line splits at a T-junction into two
-# branches. Each branch starts with a quarter-wave impedance transformer that
-# matches the (high) edge impedance of a patch element back down to 100 ohm,
-# so that the two 100-ohm branches combine in parallel to a clean 50 ohm at
-# the T-junction - a classic "corporate feed" network.
-#
-# RAM requirement 6GB
+# Two patch antennas side by side, powered from a single input that splits
+# into two branches at a T-junction in the feed trace. Each branch has a
+# short impedance-matching section before it reaches its patch, so both
+# patches radiate together in phase, forming a small array. Built on
+# RO4003C substrate and tuned to 2.4 GHz.
 # -----------------------------------------------------------------------------
 
 import emerge as em

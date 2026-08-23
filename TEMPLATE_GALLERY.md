@@ -1,6 +1,6 @@
 # EMerge Template Gallery
 
-_Auto-generated on 2026-08-23 18:21 by `generate_template_gallery.py` — do not edit by hand, re-run the script instead._
+_Auto-generated on 2026-08-23 21:08 by `generate_template_gallery.py` — do not edit by hand, re-run the script instead._
 
 **22** templates with a preview image, **25** implemented in total, out of **65** catalogued in `Templates/checklist.md`.
 

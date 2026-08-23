@@ -20,14 +20,14 @@
 # -----------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------
-# This is a simulation model of a 2.4 GHz circular patch with twoo coax feeds.
-# The 90 degree out of phase excitation is done in post processing, it does not have to be done
-# when setting up the simulation
-# The set_excitations() function is used to configure the field solution once to excite the ports as following:
-# Port 1: amplitude = 1, phase = 0 deg -> Signal = 1.0 + 0.0j
-# Port 2: amplitude = 1, phase = 90deg -> Signal = 0.0 + 1.0j
+# Dual-Feed Circular Patch for Circular Polarization (2.4 GHz)
 #
-# The model claims approximately 4GB of RAM
+# A round patch antenna fed from two points 90 degrees apart around its edge,
+# using the same coax probe feed as PCB-ANT-11. Combining the two feeds with
+# a 90 degree phase difference, done after the simulation with
+# set_excitations() rather than during it, produces circular polarization,
+# commonly used for GPS and radar. Built on a 60 by 70 mm board and tuned to
+# 2.4 GHz.
 # -----------------------------------------------------------------------------
 import emerge as em
 import numpy as np

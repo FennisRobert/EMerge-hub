@@ -207,7 +207,35 @@ html, body {
 }
 #empty-mark { font-size: 42px; opacity: 0.5; margin-bottom: 10px; }
 #empty-state h1 { font-size: 20px; color: var(--text); margin: 0 0 6px; }
-#empty-state > p { margin: 0 0 40px; font-size: 14px; }
+#empty-state > p { margin: 0 0 28px; font-size: 14px; line-height: 1.6; }
+
+/* ---------- How to use ---------- */
+#how-to {
+  text-align: left;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  margin-bottom: 20px;
+}
+#how-to h2 {
+  margin: 0 0 14px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-faint);
+  font-weight: 700;
+}
+#how-to ol {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--text-dim);
+  font-size: 13.5px;
+  line-height: 1.7;
+}
+#how-to li { margin-bottom: 8px; }
+#how-to li:last-child { margin-bottom: 0; }
+#how-to li::marker { color: var(--accent); font-weight: 700; }
 
 /* ---------- Leaderboard ---------- */
 #leaderboard {

@@ -20,11 +20,14 @@
 # =============================================================================
 
 # -----------------------------------------------------------------------------
-# This models a 3GHz Lange coupler. Under construction
-# It requires up to 8GB of RAM
-# 
-# The model as is is not perfectly tuned for good performance. I (Robert) who made
-# The model does not know a whole lot about Lange couplers so, feel free to improve on it!
+# Lange Coupler (3 GHz, Multi-Octave)
+#
+# A tightly coupled four-port coupler built from interleaved metal fingers,
+# connected across the gaps with wirebonds so alternating fingers act as one
+# electrical line. This interdigitated layout gives strong coupling over a
+# very wide bandwidth, swept here from 1 to 5 GHz around a 3 GHz center.
+# Built on a thin 0.258 mm substrate; needs about 8 GB of RAM to solve
+# because of the many narrow, closely spaced fingers.
 # -----------------------------------------------------------------------------
 import emerge as em
 import numpy as np

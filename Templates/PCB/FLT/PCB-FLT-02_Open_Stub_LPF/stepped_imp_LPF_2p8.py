@@ -19,6 +19,13 @@
 # =============================================================================
 
 # -----------------------------------------------------------------------------
+# Open-Stub Low-Pass Filter
+#
+# A low-pass filter that uses short open-ended stub branches instead of
+# alternating trace widths to shape its response, based on a 5th-order
+# Chebyshev design. A stub-based alternative to the stepped-impedance style
+# in PCB-FLT-01. Built on a 0.508 mm substrate and swept from 1 to 20 GHz.
+#
 # Based on / Reference Design:
 # Video: "Design of an Open-Circuited Stub Microstrip Low Pass Filter"
 # Channel: The Frequency Domain

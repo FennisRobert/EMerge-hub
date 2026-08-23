@@ -20,10 +20,11 @@
 # -----------------------------------------------------------------------------
 #   Half-Wave Center-Fed Dipole
 #
-# The 'Hello World' of antenna simulations. Simulates a basic Half-
-# Wave Center-Fed Dipole operating at 1Ghz and outputs the antenna gain charts
-# as well as an E-field 3d visualization
-# Uses up to 6GB
+# A straight wire antenna, fed at its center, cut to about half a wavelength
+# long (143 mm) so it resonates at 1 GHz. The simplest possible antenna
+# shape, and the natural "Hello World" first template to run: it outputs the
+# antenna's gain pattern and a 3D view of the electric field around it.
+# Uses up to 6 GB of RAM.
 # -----------------------------------------------------------------------------
 
 import emerge as em

@@ -20,12 +20,14 @@
 # -----------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------
-# Standard PCB Inverted-F (IFA)
+# Dual-Feed Circular Patch for Circular Polarization (2.4 GHz)
 #
-# This is a simple model of a meandering IFA antenna tuned to 868MHz. 
-# We use the PCB design class to easily route the meandering line.
-#
-# The model claims approximately 4GB of RAM
+# A round patch antenna fed from two points 90 degrees apart around its edge,
+# using the same coax probe feed as PCB-ANT-11. Combining the two feeds with
+# a 90 degree phase difference, done after the simulation with
+# set_excitations() rather than during it, produces circular polarization,
+# commonly used for GPS and radar. Built on a 60 by 70 mm board and tuned to
+# 2.4 GHz.
 # -----------------------------------------------------------------------------
 import emerge as em
 import numpy as np

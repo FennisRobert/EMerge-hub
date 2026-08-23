@@ -20,9 +20,13 @@
 # -----------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------
-# This is a simulation model of a simple inset fed patch at 2.4GHz
+# Inset-Fed Rectangular Patch Antenna (2.4 GHz)
 #
-# The model claims approximately 4GB of RAM
+# A rectangular metal patch antenna (32 by 29.2 mm) fed by a microstrip line
+# that reaches into a notch cut into the patch's edge. Cutting the feed line
+# into the patch like this is a common way to match the antenna's impedance
+# without adding extra components. Built on a 60 by 70 mm board and tuned to
+# 2.4 GHz.
 # -----------------------------------------------------------------------------
 import emerge as em
 import numpy as np

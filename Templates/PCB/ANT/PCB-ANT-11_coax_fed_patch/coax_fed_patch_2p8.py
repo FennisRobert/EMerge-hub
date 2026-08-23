@@ -20,12 +20,13 @@
 # -----------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------
-# This is a simple simulation model of a coax fed patch.
-# A coaxial feed consisting of a teflon dielectric is used to excite the patch
-# Notice that a fixed N-sided polygon is used instead of a circle to require the geometry
-# to have a consistent radius.
+# Coaxial Probe-Fed Rectangular Patch (2.4 GHz)
 #
-# The model claims approximately 4GB of RAM
+# A patch antenna fed from underneath by a coax cable that passes straight
+# through the ground plane and board, rather than by a trace on the top
+# layer. This keeps the top surface clean and can handle more power, which is
+# why probe feeds like this are common in GPS receivers. Built on a 60 by
+# 70 mm board and tuned to 2.4 GHz.
 # -----------------------------------------------------------------------------
 import emerge as em
 import numpy as np

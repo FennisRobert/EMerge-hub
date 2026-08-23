@@ -19,10 +19,12 @@
 # =============================================================================
 
 # -----------------------------------------------------------------------------
-# Optimized branchline coupler at 3.0 GHz
-# We use the offset options (dx, dy) of the .straight() command to realize asymmetric tapers
-# We also use the symmetric .taper() function to minimize the junction capacitance.
+# Branchline Coupler / 90 Degree Hybrid (3 GHz)
 #
+# A four-port coupler built from a square ring of quarter-wavelength
+# transmission lines. Power entering one port splits evenly between two
+# outputs with a 90 degree phase difference between them, useful for mixers
+# and phase-shifting circuits. Tuned to 3 GHz.
 # -----------------------------------------------------------------------------
 from emerge_config import config
 config.set_acc_threads(4)

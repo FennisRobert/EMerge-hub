@@ -20,12 +20,12 @@
 # -----------------------------------------------------------------------------
 #   Resonant Full-Wave Loop
 #
-# This is a model of a resonant full wave loop antenna in a perfect circle shape.
-# It uses FreeCAD to model the antenna design and then imports as a STEP file.
-# It was originally designed based on the wavelength at 868Mhz, but lowest reactance is
-# found a bit higher at 920 Mhz. Outputs the impedance, the antenna gain charts
-# as well as an E-field 3d visualization
-# Uses up to 20GB
+# A circular loop antenna sized to be one full wavelength around, imported
+# from a STEP CAD file made in FreeCAD rather than built directly with
+# EMerge's own geometry tools, a useful example of bringing in external CAD
+# geometry. Designed for 868 MHz, though the actual lowest reactance point
+# lands closer to 920 MHz. Outputs impedance, gain charts, and a 3D field
+# view. The heaviest template in this set, needing up to 20 GB of RAM.
 # -----------------------------------------------------------------------------
 
 import emerge as em

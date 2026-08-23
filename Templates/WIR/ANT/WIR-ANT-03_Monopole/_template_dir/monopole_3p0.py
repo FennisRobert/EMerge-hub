@@ -19,8 +19,13 @@
 # =============================================================================
 
 # -----------------------------------------------------------------------------
-# This is a very simple simulation of a monopole antenna above a finite groundplane.
-# The antenna is tuned at 2.45 GHz
+# Wire Monopole on a Finite Ground Plane (2.45 GHz)
+#
+# A simple vertical wire antenna standing above a small, finite-sized ground
+# plane rather than an idealized infinite one. Because the ground plane has
+# real edges, some of the antenna's energy diffracts around them instead of
+# reflecting cleanly, an effect this template is meant to demonstrate. Tuned
+# to 2.45 GHz.
 # -----------------------------------------------------------------------------
 
 import emerge as em

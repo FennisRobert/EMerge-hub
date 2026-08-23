@@ -22,12 +22,12 @@
 # -----------------------------------------------------------------------------
 # Cylindrical Cavity Resonator (Eigenmode)
 #
-# This demo shows how to model a closed metallic cylindrical cavity and
-# extract its resonant modes with EMerge's eigenmode solver. There are no
-# ports and no excitation, the solver searches for the frequencies that 
-# resonate inside the PEC-walled cavity. This is a good starting 
-# point for learning model building, meshing, solving and post-processing 
-# of eigenmode problems
+# Models a closed metal cylindrical can (3 cm radius, 6 cm tall) and finds
+# the frequencies at which it naturally rings, using EMerge's eigenmode
+# solver instead of a port and sweep. There is no feed and no input signal;
+# the solver searches for standing-wave patterns that fit inside the sealed
+# cavity. A simple introduction to eigenmode problems, which work
+# differently from the antenna and filter templates elsewhere in this set.
 #
 # Note that unassigned outer boundaries of a solid default to PEC (metal)
 # for the eigenmode solver, so no explicit boundary condition needs to be

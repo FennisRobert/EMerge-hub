@@ -20,12 +20,13 @@
 # -----------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------
-# Standard PCB Inverted-F (IFA)
+# Inverted-F Antenna Built from Standing Metal Plates
 #
-# This is a simple model of an IFA antenna on a 70x150mm PCB (roughly the size of an iPhone)
-# The antenna is tuned to 2.4GHz (WiFi, BLE).
-#
-# The model claims approximately 4GB of RAM
+# A 2.4 GHz WiFi/BLE antenna built the way many real devices build them: out
+# of small standing metal plates soldered onto the board, rather than a flat
+# copper trace. Sits on a 70 by 150 mm board with a solid metal ground layer
+# underneath. Targets the same 2.4 GHz band as PCB-ANT-01, so the two make a
+# good side-by-side comparison of a flat trace antenna versus a 3D metal one.
 # -----------------------------------------------------------------------------
 
 import emerge as em

@@ -19,7 +19,12 @@
 # =============================================================================
 
 # -----------------------------------------------------------------------------
-# Basic Wilkinson power divider on an 0.508mm FR4 substrate
+# Wilkinson Power Divider (2.45 GHz)
+#
+# Splits one input signal into two equal, in-phase outputs, or combines two
+# signals into one. A small 100 ohm resistor bridges the two output arms to
+# absorb reflected power and keep the outputs isolated from each other.
+# Built on a 0.508 mm FR4 substrate and tuned around 2.45 GHz.
 # -----------------------------------------------------------------------------
 from emerge_config import config
 config.set_acc_threads(10)

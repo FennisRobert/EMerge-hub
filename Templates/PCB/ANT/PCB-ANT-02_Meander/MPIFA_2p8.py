@@ -20,12 +20,13 @@
 # -----------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------
-# Standard PCB Inverted-F (IFA)
+# Meandered Planar Inverted-F Antenna (MIFA) for 868 MHz
 #
-# This is a simple model of a meandering IFA antenna tuned to 868MHz. 
-# We use the PCB design class to easily route the meandering line.
-#
-# The model claims approximately 4GB of RAM
+# A compact antenna where the metal trace is folded back and forth (meandered)
+# instead of running in a straight line, so it fits on a smaller board. Built
+# on a 60 by 120 mm FR4 board and tuned to 868 MHz, a band widely used by
+# LoRa and other short-range radios in Europe. The folding is laid out with
+# EMerge's PCB routing tool rather than drawn segment by segment.
 # -----------------------------------------------------------------------------
 from emerge_config import config
 config.set_acc_threads(10)

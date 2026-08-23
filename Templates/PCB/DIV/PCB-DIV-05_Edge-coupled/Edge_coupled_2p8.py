@@ -19,10 +19,14 @@
 # =============================================================================
 
 # -----------------------------------------------------------------------------
-# This model features an edge coupled power coupler using the new .move() instruction
-# The impedances (odd and even) for the transmission lines are estimated using Henrik Forstens transmission line calculator
+# Edge-Coupled Directional Coupler (3 GHz)
 #
-# This model takes about 10GB of RAM
+# Two transmission lines running side by side with a very small gap between
+# them (40 micrometers), so part of the signal on one line couples across to
+# the other. Couplers like this are used to sample a small, known fraction of
+# a signal for power monitoring or SWR detection without interrupting the
+# main path. Tuned to 3 GHz. The tiny coupling gap needs a fine mesh to
+# resolve accurately, so this template needs around 10 GB of RAM to solve.
 # -----------------------------------------------------------------------------
 from emerge_config import config
 config.set_acc_threads(4)

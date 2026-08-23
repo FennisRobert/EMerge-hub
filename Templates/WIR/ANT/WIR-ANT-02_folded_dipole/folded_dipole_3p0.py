@@ -20,11 +20,16 @@
 # =============================================================================
 
 # -----------------------------------------------------------------------------
-# This simulation model creates a Folded Dipole with a 300Ω input impedance.
-# The dipole is modeled using a BSpline with coordinates and control points chosen accordingly.
-# 
-# It currently cannot run in 2.8 due the the lack of multiplicities input.
-# It requires up to 10GB of RAM.
+# Folded Dipole Antenna (300 Ohm Feed)
+#
+# A folded dipole, the loop-shaped variant of a straight dipole, built from a
+# smooth curved wire path instead of straight segments. Folded dipoles
+# naturally present a 300 ohm feed impedance, which is why they were
+# historically used with the 300 ohm twin-lead cable that fed broadcast TV
+# and FM antennas. Tuned near 1.45 GHz.
+#
+# This template needs a solver feature only available in EMerge 3.0, so
+# there is no 2.8 version. It requires up to 10 GB of RAM.
 # -----------------------------------------------------------------------------
 import emerge as em
 import numpy as np

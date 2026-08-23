@@ -20,12 +20,13 @@
 # -----------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------
-# Printed Meandering Monopole Antenna (Sub-GHz / 868 MHz)
+# Meander-Line Monopole for Sub-GHz LoRa/RFID (868 MHz)
 #
-# A planar meandered quarter-wave monopole designed using the PCB path router.
-# Compressed into a ground clearance area on standard FR-4.
-#
-# The model claims approximately 3.5GB of RAM
+# A quarter-wave monopole antenna folded into a compact zigzag shape so it
+# fits in a small area, similar in idea to PCB-ANT-02's meandered trace but
+# as a monopole instead of an inverted-F. Built on a 60 by 120 mm board and
+# tuned to 868 MHz, a common frequency for LoRa and RFID devices. Routed
+# using EMerge's PCB path tool.
 # -----------------------------------------------------------------------------
 from emerge_config import config
 config.set_acc_threads(10)

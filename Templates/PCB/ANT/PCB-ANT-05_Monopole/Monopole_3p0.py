@@ -20,10 +20,12 @@
 # -----------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------
-# Printed Quarter-Wave Monopole Antenna (Tuned for 2.4 GHz Resonance)
+# Printed Quarter-Wave Monopole (2.4 GHz)
 #
-# A planar straight-element monopole printed over a PCB ground clearance area.
-# Length adjusted from 18.2 mm to 21.5 mm to pull X=0 down from ~2.8 GHz to 2.4 GHz.
+# The simplest antenna in this library: a single straight strip of copper,
+# printed on a 40 by 80 mm board next to a ground plane with a cleared-out
+# gap. Tuned to 2.4 GHz and modeled with a realistic copper thickness rather
+# than an idealized paper-thin sheet.
 # -----------------------------------------------------------------------------
 
 import emerge as em

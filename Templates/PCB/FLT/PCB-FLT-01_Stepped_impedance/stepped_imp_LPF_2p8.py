@@ -19,6 +19,14 @@
 # =============================================================================
 
 # -----------------------------------------------------------------------------
+# Stepped-Impedance Low-Pass Filter
+#
+# A low-pass filter built from six alternating sections of wide and narrow
+# microstrip trace. Wide sections behave like small inductors and narrow
+# sections like small capacitors, so the alternating pattern approximates a
+# classic LC low-pass filter using only trace geometry. Swept from 1 to
+# 5 GHz on a 1.58 mm substrate.
+#
 # Based on / Reference Design:
 # "Design and simulation of a stepped impedance low-pass filter using Altair FEKO"
 # Author: Saranraj Karuppuswami_21591

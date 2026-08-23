@@ -20,12 +20,16 @@
 # -----------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------
-# Standard PCB Planer Inverted-F (IFA)
+# Planar Inverted-F Antenna (PIFA) for 2.4 GHz WiFi/BLE
 #
-# This is a simple model of an IFA antenna on a 70x150mm PCB (roughly the size of an iPhone)
-# The antenna is tuned to 2.4GHz (WiFi, BLE).
+# A microstrip inverted-F trace etched into the top copper layer of a 70 by
+# 150 mm, 1.5 mm FR4 board next to a partial ground plane. The F-shaped trace
+# is fed by a lumped port at its base and tuned to resonate across the
+# 2.4 GHz WiFi/BLE band, swept from 2.2 to 2.6 GHz over 11 points.
 #
-# The model claims approximately 4GB of RAM
+# The reference benchmark antenna for this library: a minimal, single-layer,
+# single-port geometry with local mesh refinement at the antenna edge and
+# port face. Needs roughly 4 GB of RAM to solve.
 # -----------------------------------------------------------------------------
 
 import emerge as em
