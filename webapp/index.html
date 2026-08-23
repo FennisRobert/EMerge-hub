@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EMerge Template Explorer</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📡</text></svg>">
+</head>
+<body>
+
+<div id="app">
+
+  <header id="topbar">
+    <button id="sidebar-toggle" aria-label="Toggle template list">☰</button>
+    <div id="brand">
+      <img id="brand-mark" src="EMS_small.png" alt="EMerge logo">
+      <span id="brand-name">EMerge Template Explorer</span>
+    </div>
+    <div id="search-wrap">
+      <input id="search" type="search" placeholder="Search templates…" autocomplete="off">
+    </div>
+    <div id="stats"></div>
+  </header>
+
+  <div id="body">
+    <nav id="sidebar">
+      <div id="tree"></div>
+    </nav>
+
+    <div id="sidebar-scrim"></div>
+
+    <main id="content">
+      <div id="empty-state">
+        <div id="empty-mark">📡</div>
+        <h1>EMerge Template Explorer</h1>
+        <p>Pick a template from the list to see its geometry, description, and source code.</p>
+
+        <div id="leaderboard">
+          <h2>Top Contributors</h2>
+          <ol id="leaderboard-list"></ol>
+          <div id="leaderboard-lead"></div>
+        </div>
+      </div>
+
+      <article id="template-view" hidden>
+        <div class="tpl-header">
+          <div class="tpl-titles">
+            <h1 id="tpl-name"></h1>
+            <code id="tpl-id"></code>
+          </div>
+          <div class="tpl-badges" id="tpl-badges"></div>
+        </div>
+
+        <div class="tpl-meta" id="tpl-meta"></div>
+
+        <p class="tpl-description" id="tpl-description"></p>
+
+        <div class="tpl-image-wrap" id="tpl-image-wrap">
+          <img id="tpl-image" alt="Template geometry preview">
+        </div>
+
+        <div class="code-panel">
+          <div class="code-tabs" id="code-tabs"></div>
+          <div class="code-toolbar">
+            <span id="code-filename"></span>
+            <button id="copy-btn" type="button">
+              <span id="copy-icon">⧉</span>
+              <span id="copy-label">Copy</span>
+            </button>
+          </div>
+          <pre><code id="code-block" class="language-python"></code></pre>
+        </div>
+      </article>
+    </main>
+  </div>
+</div>
+
+<div id="lightbox" hidden>
+  <img id="lightbox-img" alt="">
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
