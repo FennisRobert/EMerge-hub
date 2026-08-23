@@ -12,6 +12,7 @@
 
   let data = null;
   let flatTemplates = []; // {id, name, sectionTitle, subTitle, template, itemEl}
+  let groups = []; // {sectionEl, subHeaderEl, subBodyEl, itemEls}
   let activeId = null;
   let activeFiles = [];
   let activeFileIndex = 0;
@@ -56,6 +57,7 @@
   function renderTree() {
     tree.innerHTML = '';
     flatTemplates = [];
+    groups = [];
 
     data.sections.forEach((section) => {
       const sTitle = document.createElement('div');
@@ -64,11 +66,22 @@
       tree.appendChild(sTitle);
 
       section.subsections.forEach((sub) => {
-        const subTitle = document.createElement('div');
-        subTitle.className = 'sub-title';
-        subTitle.textContent = sub.title;
-        tree.appendChild(subTitle);
+        const subHeader = document.createElement('button');
+        subHeader.type = 'button';
+        subHeader.className = 'sub-title';
+        subHeader.innerHTML = `<span class="chevron">▾</span><span>${escapeHtml(sub.title)}</span>`;
+        tree.appendChild(subHeader);
 
+        const subBody = document.createElement('div');
+        subBody.className = 'sub-body';
+        tree.appendChild(subBody);
+
+        subHeader.addEventListener('click', () => {
+          const collapsed = subHeader.classList.toggle('collapsed');
+          subBody.classList.toggle('collapsed', collapsed);
+        });
+
+        const itemEls = [];
         sub.templates.forEach((t) => {
           const btn = document.createElement('button');
           btn.className = 'tpl-item' + (t.image ? ' has-image' : '');
@@ -82,7 +95,8 @@
             window.location.hash = t.id;
             closeSidebarOnMobile();
           });
-          tree.appendChild(btn);
+          subBody.appendChild(btn);
+          itemEls.push(btn);
 
           flatTemplates.push({
             id: t.id,
@@ -93,6 +107,8 @@
             itemEl: btn,
           });
         });
+
+        groups.push({ sectionEl: sTitle, subHeaderEl: subHeader, subBodyEl: subBody, itemEls });
       });
     });
   }
@@ -245,27 +261,37 @@
   // ---- Search / filter ----
   search.addEventListener('input', () => {
     const q = search.value.trim().toLowerCase();
+
     flatTemplates.forEach((f) => {
       const hay = `${f.id} ${f.name} ${f.sectionTitle} ${f.subTitle}`.toLowerCase();
       f.itemEl.style.display = !q || hay.includes(q) ? '' : 'none';
     });
-    document.querySelectorAll('.section-title, .sub-title').forEach((elm) => {
-      elm.style.display = '';
-    });
-    if (q) {
-      // hide empty section/sub headers
-      let visibleUnderCurrent = false;
-      const nodes = Array.from(tree.children);
-      for (let i = nodes.length - 1; i >= 0; i--) {
-        const node = nodes[i];
-        if (node.classList.contains('tpl-item')) {
-          if (node.style.display !== 'none') visibleUnderCurrent = true;
-        } else {
-          if (!visibleUnderCurrent) node.style.display = 'none';
-          if (node.classList.contains('section-title')) visibleUnderCurrent = false;
-        }
+
+    const sectionVisible = new Map();
+    groups.forEach((g) => {
+      const anyVisible = g.itemEls.some((elm) => elm.style.display !== 'none');
+      const show = !q || anyVisible;
+      g.subHeaderEl.style.display = show ? '' : 'none';
+      if (!show) {
+        g.subBodyEl.style.display = 'none';
+      } else if (q) {
+        g.subBodyEl.style.display = 'block'; // force-expand matches while searching
+      } else {
+        g.subBodyEl.style.display = ''; // restore manual collapsed/expanded state
       }
-    }
+      sectionVisible.set(g.sectionEl, (sectionVisible.get(g.sectionEl) || false) || show);
+    });
+    sectionVisible.forEach((visible, sectionEl) => {
+      sectionEl.style.display = visible ? '' : 'none';
+    });
+  });
+
+  // ---- Brand / home link ----
+  el('brand').addEventListener('click', (e) => {
+    e.preventDefault();
+    window.location.hash = '';
+    handleHashChange();
+    closeSidebarOnMobile();
   });
 
   // ---- Mobile sidebar ----

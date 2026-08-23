@@ -68,7 +68,11 @@ html, body {
   font-weight: 600;
   letter-spacing: 0.2px;
   white-space: nowrap;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
 }
+#brand:hover { opacity: 0.85; }
 #brand-mark { height: 30px; width: auto; display: block; }
 #brand-name { font-size: 15px; }
 
@@ -127,12 +131,31 @@ html, body {
 }
 
 .sub-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  background: none;
+  border: none;
+  font: inherit;
   font-size: 12.5px;
   color: var(--text-dim);
   padding: 8px 18px 4px 18px;
   font-weight: 600;
-  cursor: default;
+  cursor: pointer;
+  text-align: left;
 }
+.sub-title:hover { color: var(--text); }
+.sub-title .chevron {
+  display: inline-block;
+  font-size: 9px;
+  color: var(--text-faint);
+  transition: transform 0.15s ease;
+  flex: 0 0 auto;
+}
+.sub-title.collapsed .chevron { transform: rotate(-90deg); }
+
+.sub-body.collapsed { display: none; }
 
 .tpl-item {
   display: flex;
