@@ -69,7 +69,11 @@ This checklist tracks community-contributed simulation templates for **EMerge**.
 | `PCB-INT-05` | **GCPW with Via Fence** | Waveguide Port | Substrate mode suppression at high GHz. | - [ ] | - [ ] |  |
 | `PCB-INT-06` | **Differential Pair Routing** | Differential Multi-Mode | High-speed digital (PCIe, USB) odd/even mode. | - [ ] | - [ ] |  |
 
----
+### 1.5 PCB Matching circuits
+
+| ID | Model Name | Feed Strategy | Target Application / Notes | v2.8 | v3.0 | Contributor |
+| --- | --- | --- | --- | --- | --- | --- |
+| `PCB-MTH-01` | **PCB Tapers** | Microstrip | Different tapers (exponential, linear, etc.). | - [x] | - [x] | andresmmera |
 
 ## 2. Waveguide & Cavity Technology
 

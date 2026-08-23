@@ -125,18 +125,22 @@ def simulate_taper(taper_type):
     Z_profile, W_profile = taper_width_profile(
         taper_type, z_mid, Ltaper, Z1, Z2, er, th, gamma_max=GAMMA_MAX
     )
+    print(','.join([f"{x:.3f}" for x in Z_profile]))
+    print(','.join([f"{x:.3f}" for x in W_profile]))
 
     # Widths for the clean uniform feed lines at each end
     W_feed_in  = taper_width_profile(taper_type, np.array([0.0]), Ltaper, Z1, Z2, er, th)[1][0]
     W_feed_out = taper_width_profile(taper_type, np.array([Ltaper]), Ltaper, Z1, Z2, er, th)[1][0]
 
+    print(W_feed_in)
+    print(W_feed_out)
     dz = Ltaper / N_seg
 
 
     ############################################################
     #                      SIMULATION SETUP                    #
     ############################################################
-    model = em.Simulation(project_name, save_file=True)
+    model = em.Simulation(project_name, loglevel='WARNING')
     model.check_version("3.0.0")
 
 
@@ -205,7 +209,7 @@ def simulate_taper(taper_type):
     #                      RUN SIMULATION                      #
     ############################################################
     start_time = time.time()
-    data = model.mw.run_sweep(parallel=True, n_workers=8, frequency_groups=8)
+    data = model.mw.run_sweep(frequency_groups=8)
     run_time = (time.time() - start_time) / 60
     print(f"Simulation completed in {run_time:.2f} minutes")
 
