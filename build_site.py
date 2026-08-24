@@ -301,7 +301,7 @@ def build_data(sections: list, models: dict) -> dict:
             out_templates = []
             for row in sub.rows:
                 total_rows += 1
-                model = models.get(row.id)
+                model = models.get(row.id.upper())
                 if model is None:
                     continue
                 implemented += 1
@@ -406,7 +406,7 @@ def main() -> None:
     for section in data["sections"]:
         for sub in section["subsections"]:
             for t in sub["templates"]:
-                model = models[t["id"]]
+                model = models[t["id"].upper()]
                 if t["image"]:
                     shutil.copy2(model.image, assets_dir / f"{t['id']}.png")
                 if t["plot"]:

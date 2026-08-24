@@ -1,8 +1,8 @@
 # EMerge Template Gallery
 
-_Auto-generated on 2026-08-24 14:15 by `generate_template_gallery.py` — do not edit by hand, re-run the script instead._
+_Auto-generated on 2026-08-24 16:25 by `generate_template_gallery.py` — do not edit by hand, re-run the script instead._
 
-**25** templates with a preview image, **28** implemented in total, out of **65** catalogued in `Templates/checklist.md`.
+**27** templates with a preview image, **30** implemented in total, out of **65** catalogued in `Templates/checklist.md`.
 
 ## Contents
 
@@ -345,6 +345,24 @@ _Nothing implemented yet in this category — see below._
 </tr>
 <tr>
 <td align="center" width="33%">
+<a href="Templates/WIR/ANT/WIR-ANT-04a_Yagi_3a"><img src="Templates/WIR/ANT/WIR-ANT-04a_Yagi_3a/geo.png" width="230"/></a><br/>
+<b>WIR-ANT-04a · 3-Element Yagi-Uda Antenna</b><br/>
+<sub>Parasitic director and reflector dynamics.</sub><br/>
+<sub>Feed: Discrete Gap Port</sub><br/>
+<sub>✅ 2.8 &nbsp;·&nbsp; ✅ 3.0
+ &nbsp;·&nbsp; Michael Burbidge
+</sub>
+</td>
+<td align="center" width="33%">
+<a href="Templates/WIR/ANT/WIR-ANT-04b_Yagi_5e"><img src="Templates/WIR/ANT/WIR-ANT-04b_Yagi_5e/geo.png" width="230"/></a><br/>
+<b>WIR-ANT-04b · 5-Element Yagi-Uda Antenna</b><br/>
+<sub>Parasitic director and reflector dynamics.</sub><br/>
+<sub>Feed: Discrete Gap Port</sub><br/>
+<sub>✅ 2.8 &nbsp;·&nbsp; ✅ 3.0
+ &nbsp;·&nbsp; Robert Fennis
+</sub>
+</td>
+<td align="center" width="33%">
 <a href="Templates/WIR/ANT/WIR-ANT-06_Loop"><img src="Templates/WIR/ANT/WIR-ANT-06_Loop/geo.png" width="230"/></a><br/>
 <b>WIR-ANT-06 · Resonant Full-Wave Loop</b><br/>
 <sub>Directional wire antenna for radio receivers.</sub><br/>
@@ -353,8 +371,6 @@ _Nothing implemented yet in this category — see below._
  &nbsp;·&nbsp; Michael Burbidge
 </sub>
 </td>
-<td width="33%"></td>
-<td width="33%"></td>
 </tr>
 </table>
 
@@ -400,8 +416,6 @@ Planned templates from `checklist.md` with no matching folder under `Templates/`
 | `WAV-CMP-02` | Multi-Hole Directional Coupler | Rectangular Waveguide | High-power directional sampling. |
 | `WAV-CMP-03` | Coax to Rectangular Waveguide | Coax Probe | Standard coaxial-to-waveguide adapter. |
 | `WAV-FLT-03` | Coaxial Cavity Filter (Combline) | Coax Probe Ports | High-Q cellular base station filter. |
-| `WIR-ANT-04a` | 3-Element Yagi-Uda Antenna | Discrete Gap Port | Parasitic director and reflector dynamics. |
-| `WIR-ANT-04b` | 5-Element Yagi-Uda Antenna | Discrete Gap Port | Parasitic director and reflector dynamics. |
 | `WIR-ANT-05` | Electrically Small Wire Loop | Discrete Gap Port | Near-field magnetic sensing / NFC baseline. |
 | `WIR-ANT-07` | Axial-Mode Helical Antenna | Coax + Ground Plane | 3D curve meshing & circular polarization. |
 | `WIR-ANT-08` | Normal-Mode (Rubber Ducky) Helix | Coax Base Feed | Compact helical monopole for walkie-talkies. |

@@ -305,7 +305,7 @@ def render_card(row: Row, model: ModelFolder | None, templates_dir_name: str) ->
 
 def render_grid(rows: list[Row], models: dict[str, ModelFolder], templates_dir_name: str,
                  cols: int = 3) -> str:
-    cells = [render_card(row, models.get(row.id), templates_dir_name) for row in rows]
+    cells = [render_card(row, models.get(row.id.upper()), templates_dir_name) for row in rows]
     out = ['<table>']
     for i in range(0, len(cells), cols):
         out.append("<tr>")
@@ -324,8 +324,8 @@ def build_markdown(sections: list[Section], models: dict[str, ModelFolder],
     now = dt.datetime.now().strftime("%Y-%m-%d %H:%M")
 
     total_rows = sum(len(sub.rows) for sec in sections for sub in sec.subsections)
-    built_rows = [r for sec in sections for sub in sec.subsections for r in sub.rows if r.id in models]
-    with_image = [r for r in built_rows if models[r.id].image]
+    built_rows = [r for sec in sections for sub in sec.subsections for r in sub.rows if r.id.upper() in models]
+    with_image = [r for r in built_rows if models[r.id.upper()].image]
 
     out: list[str] = []
     out.append("# EMerge Template Gallery")
@@ -357,9 +357,9 @@ def build_markdown(sections: list[Section], models: dict[str, ModelFolder],
         out.append(f"## {section.title}")
         out.append("")
         for sub in section.subsections:
-            visual_rows = [r for r in sub.rows if r.id in models and models[r.id].image]
-            text_only_rows = [r for r in sub.rows if r.id in models and not models[r.id].image]
-            not_built = [r for r in sub.rows if r.id not in models]
+            visual_rows = [r for r in sub.rows if r.id.upper() in models and models[r.id.upper()].image]
+            text_only_rows = [r for r in sub.rows if r.id.upper() in models and not models[r.id.upper()].image]
+            not_built = [r for r in sub.rows if r.id.upper() not in models]
             missing_rows.extend(not_built)
 
             out.append(f"### {sub.title}")
