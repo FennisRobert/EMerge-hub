@@ -100,7 +100,7 @@ This checklist tracks community-contributed simulation templates for **EMerge**.
 | `WAV-FLT-01` | **Waveguide Iris Bandpass Filter** | Rectangular Waveguide | Inductive metallic posts/irises in guide. | - [x] | - [x] | Robert Fennis |
 | `WAV-FLT-02` | **Cylindrical Cavity Resonator** | Eigenmode (No Ports) | $TE_{011}$ eigenmode validation test. | - [x] | - [x] | elektroedde |
 | `WAV-FLT-03` | **Coaxial Cavity Filter (Combline)** | Coax Probe Ports | High-Q cellular base station filter. | - [ ] | - [ ] |  |
-| `WAV-FLT-04` | **Dielectric Resonator Filter** | Coax / Microstrip Feed | High-Q ceramic puck filter for 5G. | - [ ] | - [ ] |  |
+| `WAV-FLT-04` | **Dielectric Resonator Filter** | Coax / Microstrip Feed | High-Q ceramic puck filter for 5G. | - [x] | - [x] | Robert Fennis |
 
 ---
 
