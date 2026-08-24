@@ -1,8 +1,8 @@
 # EMerge Template Gallery
 
-_Auto-generated on 2026-08-24 12:51 by `generate_template_gallery.py` — do not edit by hand, re-run the script instead._
+_Auto-generated on 2026-08-24 13:31 by `generate_template_gallery.py` — do not edit by hand, re-run the script instead._
 
-**24** templates with a preview image, **27** implemented in total, out of **65** catalogued in `Templates/checklist.md`.
+**25** templates with a preview image, **28** implemented in total, out of **65** catalogued in `Templates/checklist.md`.
 
 ## Contents
 
@@ -287,7 +287,15 @@ _Nothing implemented yet in this category — see below._
  &nbsp;·&nbsp; Robert Fennis
 </sub>
 </td>
-<td width="33%"></td>
+<td align="center" width="33%">
+<a href="Templates/WAV/FLT/WAV-FLT-04_Dielectric_filt"><img src="Templates/WAV/FLT/WAV-FLT-04_Dielectric_filt/geo.png" width="230"/></a><br/>
+<b>WAV-FLT-04 · Dielectric Resonator Filter</b><br/>
+<sub>High-Q ceramic puck filter for 5G.</sub><br/>
+<sub>Feed: Coax / Microstrip Feed</sub><br/>
+<sub>✅ 2.8 &nbsp;·&nbsp; ✅ 3.0
+ &nbsp;·&nbsp; Robert Fennis
+</sub>
+</td>
 <td width="33%"></td>
 </tr>
 </table>
@@ -392,7 +400,6 @@ Planned templates from `checklist.md` with no matching folder under `Templates/`
 | `WAV-CMP-02` | Multi-Hole Directional Coupler | Rectangular Waveguide | High-power directional sampling. |
 | `WAV-CMP-03` | Coax to Rectangular Waveguide | Coax Probe | Standard coaxial-to-waveguide adapter. |
 | `WAV-FLT-03` | Coaxial Cavity Filter (Combline) | Coax Probe Ports | High-Q cellular base station filter. |
-| `WAV-FLT-04` | Dielectric Resonator Filter | Coax / Microstrip Feed | High-Q ceramic puck filter for 5G. |
 | `WIR-ANT-04a` | 3-Element Yagi-Uda Antenna | Discrete Gap Port | Parasitic director and reflector dynamics. |
 | `WIR-ANT-04b` | 5-Element Yagi-Uda Antenna | Discrete Gap Port | Parasitic director and reflector dynamics. |
 | `WIR-ANT-05` | Electrically Small Wire Loop | Discrete Gap Port | Near-field magnetic sensing / NFC baseline. |
