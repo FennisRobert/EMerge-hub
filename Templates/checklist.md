@@ -89,7 +89,7 @@ This checklist tracks community-contributed simulation templates for **EMerge**.
 
 | ID | Model Name | Feed Strategy | Target Application / Notes | v2.8 | v3.0 | Contributor |
 | --- | --- | --- | --- | --- | --- | --- |
-| `WAV-CMP-01` | **Magic Tee (Waveguide Hybrid)** | Rectangular Waveguide | E-plane and H-plane 180° hybrid junction. | - [ ] | - [ ] |  |
+| `WAV-CMP-01` | **Magic Tee (Waveguide Hybrid)** | Rectangular Waveguide | E-plane and H-plane 180° hybrid junction. | - [x] | - [x] | Robert Fennis |
 | `WAV-CMP-02` | **Multi-Hole Directional Coupler** | Rectangular Waveguide | High-power directional sampling. | - [ ] | - [ ] |  |
 | `WAV-CMP-03` | **Coax to Rectangular Waveguide** | Coax Probe | Standard coaxial-to-waveguide adapter. | - [ ] | - [ ] |  |
 

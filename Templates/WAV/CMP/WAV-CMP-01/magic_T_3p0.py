@@ -1,5 +1,5 @@
 # =============================================================================
-# EMerge Simulation Template: [Model Name / ID]
+# EMerge Simulation Template: Magig-Tee | WAV-CMP-02
 #
 # Copyright (C) [Year] [Author Name or GitHub Handle]
 #
@@ -16,32 +16,25 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
-#
-# -----------------------------------------------------------------------------
-# AI ASSISTANCE NOTICE (Uncomment if generated/assisted by an LLM):
-# This script was generated or assisted using Large Language Models (LLMs).
-# In accordance with EU copyright principles, pure AI-generated output resides 
-# in the public domain (CC0 1.0 Universal). Human edits, architectural layout,
-# and solver integrations are licensed under GNU GPL v2.
 # =============================================================================
 
 # -----------------------------------------------------------------------------
-# <SHORT, CATCHY TITLE OF THE DEMO> (e.g. "Grounded Coplanar Waveguide Filter")
+# Waveguide Magic-Tee
 #
-# <One or two sentence summary of what this demo shows and why it's
-#  interesting/useful. Mention the EMerge feature(s) being highlighted,
-#  e.g. "This demo shows how to use the PCBLayouter to route a stripline
-#  filter and extract its S-parameters."
+# This model is a rectangular waveguide (WR90) Magic-Tee. A magic-tee is a 4 port
+# waveguide component that has similar characteristics as a Ratrace combiner in 
+# stripline circuits.
+# Two of its ports are called the sum (Σ) (port 1) and delta (Δ) (port 2) which when
+# driven excite the two other ports in the same phase when driven by the sum port
+# and in opposite phase when driven at the delta port. 
 #
-#  Optional extras worth including here:
-#   - Reference to a textbook / paper / video the design is based on
-#   - Expected RAM / runtime if the simulation is heavy
-#   - Author credit, e.g. "Demo by <name>"
-#   - Any known caveats (e.g. "resonance is a bit low due to coarse mesh")
+# The matching circuit is optimized using the script called magic_T_optimizer.py.
+# It requires emerge version 3.0.0a12 or later if you want to optimize from scratch using
+# the "direct" optimizer. It takes about 200 runs to find an optimum.
+#
 # -----------------------------------------------------------------------------
 
 import emerge as em
-import numpy as np
 from emerge.plot import plot_sp  # + smith, plot_ff, plot_ff_polar, plot as needed
 
 ############################################################
@@ -67,36 +60,50 @@ MU0 = 1/(C0*C0*EPS0)
 #                   DESIGN / GEOMETRY PARAMETERS           #
 ############################################################
 
-# Collect all dimensions, frequencies and material properties here as named
-# variables so the geometry section below stays clean and the design is easy
-# to tweak.
 
 # --- Frequency ------------------------------------------------------------
-f0 = 10e9       # center / operating frequency (Hz)
-# f1, f2 = ..., ...   # sweep start/stop, if using a frequency range
+f1 = 8*GHz
+f2 = 12*GHz
+nf = 21
 
 # --- Geometry dimensions ---------------------------------------------------
 
+wga = 22.86*mm
+wgb = 10.16*mm
+L = 50*mm
 
+Ri = 1*mm
 
-############################################################
-#                    MATERIAL DEFINITIONS                  #
-############################################################
-
-# mymat = em.Material(er=er, tand=tand, color="#217627", opacity=0.3)
+Ro = 14.739*mm
+Hlarge = 5.672*mm
+Hsmall = 8.350*mm
+ydist = 8.330*mm
+iris_open = 894.206*mm
 
 ############################################################
 #                      SIMULATION SETUP                    #
 ############################################################
 
 
-model = em.Simulation("TemplateDemo")
-model.check_version("2.8.2")  # Checks version compatibility.
+model = em.Simulation("WaveguideMagicT")
+model.check_version("3.0.0")  # Checks version compatibility.
 
 ############################################################
 #                          GEOMETRY                        #
 ############################################################
 
+wg_sum = em.geo.Box(wga, L-1*mm, wgb, (-wga/2, -L, -wgb))
+wg_12 = em.geo.Box(2*L, wga, wgb, (-L, 0, -wgb))
+wg_diff = em.geo.Box(wgb, wga, L, (-wgb/2, 0, 0))
+iris_wg = em.geo.Box(wga*iris_open, 1*mm, wgb, (-wga/2*iris_open, -1*mm, -wgb))
+    
+wgtot = em.geo.unite(wg_sum, wg_12, wg_diff, iris_wg)
+
+cone1 = em.geo.Cone((0, wga-ydist, -wgb), em.ZAX.np*Hlarge, Ro, Ri)
+cyl = em.geo.Cylinder(Ri, Hsmall, em.cs(origin=(0, wga-ydist, -wgb+Hlarge)))
+
+matcher = em.geo.add(cone1, cyl)
+final = em.geo.subtract(wgtot, matcher)
 
 ############################################################
 #                      COMMIT GEOMETRY                     #
@@ -110,29 +117,25 @@ model.commit_geometry()
 ############################################################
 
 # Set either a single frequency or a frequency sweep.
-model.mw.set_frequency(f0)
-# model.mw.set_frequency_range(f1, f2, n_points)
+model.mw.set_frequency_range(f1, f2, nf)
 
 # Set the overall mesh resolution as a fraction of the wavelength.
-model.mw.set_resolution(0.2)
-
-# Optional: refine the mesh locally around critical features
-# (edges, ports, small gaps, vias, etc.)
-# model.mesher.set_boundary_size(<selection>, 0.5 * mm)
-# model.mesher.set_face_size(<selection>, 0.5 * mm)
-# model.mesher.set_domain_size(<selection>, 1 * mm)
+model.mw.set_resolution(0.12)
 
 ############################################################
 #                    GENERATE & VIEW MESH                   #
 ############################################################
-
 model.generate_mesh()
-model.view()
 
 ############################################################
 #                    BOUNDARY CONDITIONS                    #
 ############################################################
 
+
+p1 = model.mw.bc.RectangularWaveguide(final.face('-x'), 3)
+p2 = model.mw.bc.RectangularWaveguide(final.face('+x'), 4)
+p3 = model.mw.bc.RectangularWaveguide(final.face('-y'), 1)
+p4 = model.mw.bc.RectangularWaveguide(final.face('+z'), 2)
 
 ############################################################
 #                       RUN SIMULATION                      #
@@ -144,30 +147,38 @@ data = model.mw.run_sweep()
 #                   POST-PROCESSING: S-PARAMS                #
 ############################################################
 
-# g = data.scalar.grid
-# f = g.freq
-# S11 = g.S(1, 1)
-# S21 = g.S(2, 1)
-# plot_sp(f, [S11, S21], labels=["S11", "S21"], dblim=[-40, 6])
+g = data.scalar.grid
+f = g.freq
+S11 = g.S(1, 1)
+S22 = g.S(2, 2)
+S31 = g.S(3, 1)
+S32 = g.S(3, 2)
 
-# Optional: supersample with Vector Fitting for smoother curves
-# fdense = g.dense_f(2001)
-# S11_fit = g.model_S(1, 1, fdense)
-# S21_fit = g.model_S(2, 1, fdense)
-# plot_sp(fdense, [S11_fit, S21_fit], labels=["S11", "S21"])
-
-############################################################
-#              POST-PROCESSING: FAR-FIELD (ANTENNAS)         #
-############################################################
-
-# ff = data.field.find(freq=f0).farfield_2d((1, 0, 0), (0, 1, 0), <boundary>)
-# plot_ff(ff.ang * 180 / np.pi, ff.gain.norm, dB=True, ylabel="Gain [dBi]")
-# plot_ff_polar(ff.ang, ff.gain.norm, dB=True, dBfloor=-20)
+plot_sp(f, [S11, S22, S31, S32], labels=["S11", "S22", "S31", "S32"], dblim=[-40, 6], spec_area=[(9e9, 11e9, -20,0)])
 
 ############################################################
 #                     3D FIELD VISUALIZATION                 #
 ############################################################
 
-field = data.field.find(freq=f0)
+field = data.field.find(freq=10e9)
+field.set_excitations(1,0,0,0)
 display = model.display
 display.populate()
+display.add_portmode(p1, k0=field.k0)
+display.add_portmode(p2, k0=field.k0)
+display.add_portmode(p3, k0=field.k0)
+display.add_portmode(p4, k0=field.k0)
+display.cbar('|E|', clim=[0,3e3]).animate().add_field(field.grid(N=200_000).scalar('Emag','complex'), symmetrize=False)
+display.add_title('Sum Port')
+display.show()
+
+field.set_excitations(0,1,0,0)
+display = model.display
+display.populate()
+display.add_portmode(p1, k0=field.k0)
+display.add_portmode(p2, k0=field.k0)
+display.add_portmode(p3, k0=field.k0)
+display.add_portmode(p4, k0=field.k0)
+display.cbar('|E|', clim=[0,3e3]).animate().add_field(field.grid(N=200_000).scalar('Emag','complex'), symmetrize=False)
+display.add_title('Difference Port')
+display.show()

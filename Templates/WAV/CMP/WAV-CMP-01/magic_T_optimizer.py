@@ -40,7 +40,7 @@
 #   - Any known caveats (e.g. "resonance is a bit low due to coarse mesh")
 # -----------------------------------------------------------------------------
 from emerge_config import config
-config.set_acc_threads(4)
+config.set_acc_threads(10)
 import emerge as em
 import numpy as np
 from emerge.plot import plot_sp  # + smith, plot_ff, plot_ff_polar, plot as needed
@@ -70,9 +70,9 @@ MU0 = 1/(C0*C0*EPS0)
 
 
 # --- Frequency ------------------------------------------------------------
-f1 = 8*GHz
-f2 = 12*GHz
-nf = 11
+f1 = 9*GHz
+f2 = 11*GHz
+nf = 21
 
 # --- Geometry dimensions ---------------------------------------------------
 
@@ -80,40 +80,48 @@ wga = 22.86*mm
 wgb = 10.16*mm
 L = 50*mm
 
-Ro = 14*mm
+
 Ri = 1*mm
-Hlarge = 5*mm
-Hsmall = 5*mm
-ydist = 6*mm
+
+Ro = 14.938*mm
+Hlarge = 4.969*mm
+Hsmall = 8.179*mm
+ydist = 8.500*mm
+iris_open = 895.062*mm
 
 ############################################################
 #                      SIMULATION SETUP                    #
 ############################################################
 
 
-model = em.Simulation("TemplateDemo")
+model = em.Simulation("TemplateDemo", loglevel='INFO')
 model.check_version("3.0.0")  # Checks version compatibility.
 
 model.opt.add_param('Ro', Ro, (5*mm, 15*mm))
 model.opt.add_param('Hlarge', Hlarge, (2*mm, 15*mm))
 model.opt.add_param('Hsmall', Hsmall, (2*mm, 15*mm))
 model.opt.add_param('ydist', Hsmall, (2*mm, 15*mm))
-#model.opt.method = "COBYQA"
+model.opt.add_param('iris_open', iris_open, (0.1, 0.9))
+model.opt.set_method('direct')
 
-for Ro, Hlarge, Hsmall, ydist in model.opt.run(50, True):
+for Ro, Hlarge, Hsmall, ydist, iris_open, in model.opt.run(200, True):
         
     ############################################################
     #                          GEOMETRY                        #
     ############################################################
 
-    wg_sum = em.geo.Box(wga, L, wgb, (-wga/2, -L, -wgb))
+    wg_sum = em.geo.Box(wga, L-1*mm, wgb, (-wga/2, -L, -wgb))
     wg_12 = em.geo.Box(2*L, wga, wgb, (-L, 0, -wgb))
     wg_diff = em.geo.Box(wgb, wga, L, (-wgb/2, 0, 0))
+    iris_wg = em.geo.Box(wga*iris_open, 1*mm, wgb, (-wga/2*iris_open, -1*mm, -wgb))
+        
+    wgtot = em.geo.unite(wg_sum, wg_12, wg_diff, iris_wg)
 
     cone1 = em.geo.Cone((0, wga-ydist, -wgb), em.ZAX.np*Hlarge, Ro, Ri)
     cyl = em.geo.Cylinder(Ri, Hsmall, em.cs(origin=(0, wga-ydist, -wgb+Hlarge)))
 
     matcher = em.geo.add(cone1, cyl)
+    final = em.geo.subtract(wgtot, matcher)
     
     ############################################################
     #                      COMMIT GEOMETRY                     #
@@ -121,7 +129,6 @@ for Ro, Hlarge, Hsmall, ydist in model.opt.run(50, True):
 
     # Once the geometry is finalized, hand it over to the solver.
     model.commit_geometry()
-
     ############################################################
     #                    SOLVER / MESH SETTINGS                 #
     ############################################################
@@ -130,22 +137,21 @@ for Ro, Hlarge, Hsmall, ydist in model.opt.run(50, True):
     model.mw.set_frequency_range(f1, f2, nf)
 
     # Set the overall mesh resolution as a fraction of the wavelength.
-    model.mw.set_resolution(0.2)
-
+    model.mw.set_resolution(0.15)
     ############################################################
     #                    GENERATE & VIEW MESH                   #
     ############################################################
     model.generate_mesh()
-
+    #model.view(plot_mesh=True)
     ############################################################
     #                    BOUNDARY CONDITIONS                    #
     ############################################################
 
 
-    p1 = model.mw.bc.RectangularWaveguide(wg_12.left, 3)
-    p2 = model.mw.bc.RectangularWaveguide(wg_12.right, 4)
-    p3 = model.mw.bc.RectangularWaveguide(wg_sum.front, 1)
-    p4 = model.mw.bc.RectangularWaveguide(wg_diff.top, 2)
+    p1 = model.mw.bc.RectangularWaveguide(final.face('-x'), 3)
+    p2 = model.mw.bc.RectangularWaveguide(final.face('+x'), 4)
+    p3 = model.mw.bc.RectangularWaveguide(final.face('-y'), 1)
+    p4 = model.mw.bc.RectangularWaveguide(final.face('+z'), 2)
 
     ############################################################
     #                       RUN SIMULATION                      #
