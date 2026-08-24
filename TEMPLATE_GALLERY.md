@@ -1,8 +1,8 @@
 # EMerge Template Gallery
 
-_Auto-generated on 2026-08-23 19:12 by `generate_template_gallery.py` — do not edit by hand, re-run the script instead._
+_Auto-generated on 2026-08-24 07:26 by `generate_template_gallery.py` — do not edit by hand, re-run the script instead._
 
-**22** templates with a preview image, **25** implemented in total, out of **65** catalogued in `Templates/checklist.md`.
+**22** templates with a preview image, **26** implemented in total, out of **65** catalogued in `Templates/checklist.md`.
 
 ## Contents
 
@@ -258,7 +258,14 @@ _Nothing implemented yet in this category — see below._
 
 ### 2.2 Waveguide Components & Plumbing
 
-_Nothing implemented yet in this category — see below._
+<details>
+<summary>Implemented, preview image not committed yet (1)</summary>
+
+| ID | Name | Notes | v2.8 | v3.0 | Contributor |
+|---|---|---|---|---|---|
+| `WAV-CMP-02` | Multi-Hole Directional Coupler | High-power directional sampling. |  |  |  |
+
+</details>
 
 ### 2.3 Cavity & Waveguide Filters
 
@@ -360,7 +367,6 @@ Planned templates from `checklist.md` with no matching folder under `Templates/`
 | `WAV-ANT-02` | Conical Horn Antenna | Circular Waveguide | Satellite communication feeds. |
 | `WAV-ANT-03` | Corrugated Horn Antenna | Circular Waveguide | Low cross-polarization reflector feeds. |
 | `WAV-CMP-01` | Magic Tee (Waveguide Hybrid) | Rectangular Waveguide | E-plane and H-plane 180° hybrid junction. |
-| `WAV-CMP-02` | Multi-Hole Directional Coupler | Rectangular Waveguide | High-power directional sampling. |
 | `WAV-CMP-03` | Coax to Rectangular Waveguide | Coax Probe | Standard coaxial-to-waveguide adapter. |
 | `WAV-FLT-01` | Waveguide Iris Bandpass Filter | Rectangular Waveguide | Inductive metallic posts/irises in guide. |
 | `WAV-FLT-03` | Coaxial Cavity Filter (Combline) | Coax Probe Ports | High-Q cellular base station filter. |
