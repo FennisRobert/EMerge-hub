@@ -1,8 +1,8 @@
 # EMerge Template Gallery
 
-_Auto-generated on 2026-08-24 08:45 by `generate_template_gallery.py` — do not edit by hand, re-run the script instead._
+_Auto-generated on 2026-08-24 12:51 by `generate_template_gallery.py` — do not edit by hand, re-run the script instead._
 
-**23** templates with a preview image, **26** implemented in total, out of **65** catalogued in `Templates/checklist.md`.
+**24** templates with a preview image, **27** implemented in total, out of **65** catalogued in `Templates/checklist.md`.
 
 ## Contents
 
@@ -276,6 +276,22 @@ _Nothing implemented yet in this category — see below._
 
 ### 2.3 Cavity & Waveguide Filters
 
+<table>
+<tr>
+<td align="center" width="33%">
+<a href="Templates/WAV/FLT/WAV-FLT-01_waveguide_iris_bp"><img src="Templates/WAV/FLT/WAV-FLT-01_waveguide_iris_bp/geo.png" width="230"/></a><br/>
+<b>WAV-FLT-01 · Waveguide Iris Bandpass Filter</b><br/>
+<sub>Inductive metallic posts/irises in guide.</sub><br/>
+<sub>Feed: Rectangular Waveguide</sub><br/>
+<sub>✅ 2.8 &nbsp;·&nbsp; ✅ 3.0
+ &nbsp;·&nbsp; Robert Fennis
+</sub>
+</td>
+<td width="33%"></td>
+<td width="33%"></td>
+</tr>
+</table>
+
 <details>
 <summary>Implemented, preview image not committed yet (1)</summary>
 
@@ -375,7 +391,6 @@ Planned templates from `checklist.md` with no matching folder under `Templates/`
 | `WAV-ANT-03` | Corrugated Horn Antenna | Circular Waveguide | Low cross-polarization reflector feeds. |
 | `WAV-CMP-02` | Multi-Hole Directional Coupler | Rectangular Waveguide | High-power directional sampling. |
 | `WAV-CMP-03` | Coax to Rectangular Waveguide | Coax Probe | Standard coaxial-to-waveguide adapter. |
-| `WAV-FLT-01` | Waveguide Iris Bandpass Filter | Rectangular Waveguide | Inductive metallic posts/irises in guide. |
 | `WAV-FLT-03` | Coaxial Cavity Filter (Combline) | Coax Probe Ports | High-Q cellular base station filter. |
 | `WAV-FLT-04` | Dielectric Resonator Filter | Coax / Microstrip Feed | High-Q ceramic puck filter for 5G. |
 | `WIR-ANT-04a` | 3-Element Yagi-Uda Antenna | Discrete Gap Port | Parasitic director and reflector dynamics. |
