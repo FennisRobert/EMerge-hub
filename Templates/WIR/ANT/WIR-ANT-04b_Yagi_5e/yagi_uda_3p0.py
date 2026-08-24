@@ -86,7 +86,7 @@ Ls = [l*l_scaling for l in Ls]
 ############################################################
 
 
-model = em.Simulation("TemplateDemo",loglevel='DEBUG')
+model = em.Simulation("TemplateDemo")
 model.check_version("3.0.0")  # Checks version compatibility.
 
 ############################################################
@@ -167,7 +167,7 @@ plot(g.freq/GHz, [Zload.real, Zload.imag], labels=['Real','Imag'], xlabel="Frequ
 #              POST-PROCESSING: FAR-FIELD (ANTENNAS)         #
 ############################################################
 
-ff = data.field.find(freq=f0).farfield_2d(em.ZAX, em.XAX, boundary_selection)
+ff = data.field.find(freq=f0).farfield_2d(em.XAX, em.YAX, boundary_selection)
 plot_ff(ff.ang * 180 / np.pi, ff.gain.norm, dB=True, ylabel="Gain [dBi]")
 plot_ff_polar(ff.ang, ff.gain.norm, dB=True, dBfloor=-40)
 

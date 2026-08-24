@@ -186,7 +186,7 @@ plot_ff(ff_xz.ang * 180 / np.pi, [ff_xz.gain.lhcp,
                                   ff_yz.gain.lhcp,
                                   ff_xz.gain.rhcp, 
                                   ff_yz.gain.rhcp], 
-        labels=['XZ Plane LHCP','YZ Plane LHCP', 'XZ Plane RHCP','YZ Plane RHCP'], dB=True, ylabel="Gain Circular polarized [dBi]")
+        labels=['XZ Plane LHCP','YZ Plane LHCP', 'XZ Plane RHCP','YZ Plane RHCP'], dB=True, xlabel='Theta (deg)', ylabel="Gain Circular polarized [dBi]")
 plot_ff_polar(ff_xz.ang, ff_yz.gain.norm, dB=True, dBfloor=-20)
 
 ############################################################

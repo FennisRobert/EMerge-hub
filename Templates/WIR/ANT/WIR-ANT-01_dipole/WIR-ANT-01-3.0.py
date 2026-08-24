@@ -152,7 +152,7 @@ print(f'Load impedance = {Zload:.1f} Ω')
 #              POST-PROCESSING: FAR-FIELD (ANTENNAS)         #
 ############################################################
 
-ff = data.field.find(freq=f0).farfield_2d((1, 0, 0), (0, 1, 0), boundary_selection)
+ff = data.field.find(freq=f0).farfield_2d((0,0,1), (0, 1, 0), boundary_selection)
 plot_ff(ff.ang * 180 / np.pi, ff.gain.norm, dB=True, ylabel="Gain [dBi]")
 plot_ff_polar(ff.ang, ff.gain.norm, dB=True, dBfloor=-40)
 

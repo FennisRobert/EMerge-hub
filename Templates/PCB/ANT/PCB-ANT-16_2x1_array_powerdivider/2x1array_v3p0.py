@@ -284,6 +284,7 @@ plot_ff(
     labels=["E-plane", "H-plane"],
     dB=True,
     ylabel="Gain [dBi]",
+    xlabel="Theta (deg)",
 )
 plot_ff_polar(ff_E.ang, ff_E.gain.norm, dB=True, dBfloor=-20)
 

@@ -1,7 +1,7 @@
 # =============================================================================
 # EMerge Simulation Template: Magig-Tee | WAV-CMP-02
 #
-# Copyright (C) [Year] [Author Name or GitHub Handle]
+# Copyright (C) 2026, Robert Fennis
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

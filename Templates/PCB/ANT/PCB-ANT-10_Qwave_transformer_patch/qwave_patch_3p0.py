@@ -164,7 +164,7 @@ plot_sp(fdense, [S11_fit], labels=["S11"])
 
 ff_xz = data.field.find(freq=f0).farfield_2d(em.ZAX, em.YAX, abc_boundary)
 ff_yz = data.field.find(freq=f0).farfield_2d(em.ZAX, em.XAX, abc_boundary)
-plot_ff(ff_xz.ang * 180 / np.pi, [ff_xz.gain.norm, ff_yz.gain.norm], labels=['XZ Plane','YZ Plane'], dB=True, ylabel="Gain [dBi]")
+plot_ff(ff_xz.ang * 180 / np.pi, [ff_xz.gain.norm, ff_yz.gain.norm], labels=['XZ Plane','YZ Plane'], dB=True, ylabel="Gain [dBi]", xlabel='Theta (deg)')
 plot_ff_polar(ff_xz.ang, ff_yz.gain.norm, dB=True, dBfloor=-20)
 
 ############################################################

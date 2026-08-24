@@ -181,6 +181,15 @@
       imgWrap.hidden = true;
     }
 
+    const plotWrap = el('tpl-plot-wrap');
+    const plotImg = el('tpl-plot');
+    if (t.plot) {
+      plotWrap.hidden = false;
+      plotImg.src = t.plot;
+    } else {
+      plotWrap.hidden = true;
+    }
+
     activeFiles = t.files || [];
     activeFileIndex = 0;
     renderCodeTabs();

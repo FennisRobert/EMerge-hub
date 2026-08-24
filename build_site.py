@@ -38,6 +38,7 @@ ID_RE = re.compile(r"^([A-Za-z]+-[A-Za-z]+-\d+[a-zA-Z]?)(?:_.*)?$")
 DIVIDER_RE = re.compile(r"^#\s*[-=]{10,}\s*$")
 LICENSE_MARKERS = ("copyright", "gnu general public license", "free software foundation")
 IMAGE_NAME = "geo.png"
+PLOT_IMAGE_NAME = "plot.png"
 
 # Shown separately at the bottom of the home page leaderboard instead of
 # competing for a top-10 spot.
@@ -80,6 +81,7 @@ class ModelFolder:
     id: str
     path: Path
     image: Path | None = None
+    plot_image: Path | None = None
     py_files: list = field(default_factory=list)
     description: str | None = None
 
@@ -219,12 +221,14 @@ def scan_templates(templates_dir: Path) -> dict:
         model_id = m.group(1).upper()
 
         images = sorted(path.rglob(IMAGE_NAME))
+        plot_images = sorted(path.rglob(PLOT_IMAGE_NAME))
         py_files = sorted((p for p in path.rglob("*.py")), key=sort_key_for_py)
 
         model = ModelFolder(
             id=model_id,
             path=path,
             image=images[0] if images else None,
+            plot_image=plot_images[0] if plot_images else None,
             py_files=py_files,
         )
         if py_files:
@@ -319,6 +323,8 @@ def build_data(sections: list, models: dict) -> dict:
                 if model.image:
                     with_image += 1
 
+                plot_rel = f"assets/{row.id}-plot.png" if model.plot_image else None
+
                 out_templates.append({
                     "id": row.id,
                     "name": row.name or model.path.name.split("_", 1)[-1].replace("_", " "),
@@ -329,6 +335,7 @@ def build_data(sections: list, models: dict) -> dict:
                     "v30": row.v30,
                     "description": model.description or row.notes,
                     "image": image_rel,
+                    "plot": plot_rel,
                     "files": files,
                 })
             if out_templates:
@@ -399,10 +406,11 @@ def main() -> None:
     for section in data["sections"]:
         for sub in section["subsections"]:
             for t in sub["templates"]:
-                if not t["image"]:
-                    continue
                 model = models[t["id"]]
-                shutil.copy2(model.image, assets_dir / f"{t['id']}.png")
+                if t["image"]:
+                    shutil.copy2(model.image, assets_dir / f"{t['id']}.png")
+                if t["plot"]:
+                    shutil.copy2(model.plot_image, assets_dir / f"{t['id']}-plot.png")
 
     (out_dir / "data.json").write_text(json.dumps(data, indent=2), encoding="utf-8")
 

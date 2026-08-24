@@ -413,20 +413,35 @@ html, body {
   padding-left: 14px;
 }
 
-.tpl-image-wrap {
+.tpl-images {
+  display: flex;
+  align-items: stretch;
+  gap: 16px;
+  margin-bottom: 28px;
+  height: 420px;
+}
+
+.tpl-image-wrap, .tpl-plot-wrap {
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 10px;
-  margin-bottom: 28px;
-  text-align: center;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.tpl-image-wrap img {
+.tpl-image-wrap { flex: 1 1 0; }
+.tpl-plot-wrap { flex: 1 1 0; }
+
+.tpl-image-wrap img, .tpl-plot-wrap img {
   max-width: 100%;
-  max-height: 480px;
+  max-height: 100%;
+  width: auto;
+  height: auto;
   border-radius: 6px;
-  cursor: zoom-in;
 }
+.tpl-image-wrap img { cursor: zoom-in; }
 
 /* ---------- Code panel ---------- */
 .code-panel {
