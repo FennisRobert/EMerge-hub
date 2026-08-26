@@ -20,7 +20,7 @@
 # -----------------------------------------------------------------------------
 #   Electrically Small Loop
 #
-# This is a model of a electrically small loop antenna in a perfect circle shape.
+# This is a model of a electrically small loop antenna in a circle shape.
 # Diameter is 1m with material being 4mm thick copper wire. Test frequency is 14mhz.
 # Outputs the impedance, the antenna gain charts as well as an E-field 3d visualization
 # WARNING/LIMITATION: The mesh is very finicky around the gap port. Port is currently
