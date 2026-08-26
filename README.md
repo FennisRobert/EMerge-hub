@@ -5,6 +5,10 @@ My dream for EMerge hub is to turn into a gigantic database of example files, tu
 
 For now, we are focussing on building out the Templates directory, just a large list of simulation files for every possible RF component imaginable.
 
+A very user friendly website that is automatically updated after each pull request made with Claude code is available here:
+
+https://fennisrobert.github.io/EMerge-hub/
+
 The idea for EMerge-hub is to be very much community driven. While helping working on the FEM solver may be more difficult, contributing with example files, templates and other simulation utilities may not be! Lets build this amazing repository together!
 
 # EMerge versions and installation
